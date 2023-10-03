@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en" and dir="Itr">
+<head>
+    <meta charset="utf-8">
+    <title> Generate Meme </title>
+    <script>
+        let memeUrl;
+
+         window.onload = () => {
+
+            document.getElementById("redirectBack").addEventListener('click', () => {
+                    window.location.href = 'http://localhost';
+                });
+                
+            document.getElementById("addm").addEventListener('click', async (e) => {
+                e.preventDefault();
+                
+                let uname = document.getElementById("uname").value;
+                let password = document.getElementById("password").value;
+
+                const request = {"username": uname, "password": password, 
+                    "meme": memeUrl};
+
+                const response = await fetch('http://localhost/api/addMeme', {
+                    method: 'POST',
+                    headers: {'content-Type': 'application/json'},
+                    body: JSON.stringify(request),
+                });
+                const data = await response.json();
+                if (data.user == "not_valid") {
+                    document.getElementById("response").innerHTML = "User not found, user created!";
+                }
+                if (data.user == uname) {
+                    let message = "Meme added to" + uname;
+                    document.getElementById("response").innerHTML = message;
+                }
+            });
+
+            const getMeme = async() => {
+                const template = document.getElementById("template").value;
+                const memeText = document.getElementById("memeText").value;
+
+                const request = {"template": template, "text": memeText};
+
+                const response = await fetch('http://localhost/api/generateMeme', {
+                    method: 'POST',
+                    headers: {'content-Type': 'application/json'},
+                    body: JSON.stringify(request),
+                });
+                const data = await response.json();
+                memeUrl = data.meme;
+                document.getElementById("imgurl").src = memeUrl;
+
+            }
+
+            document.getElementById("generate").addEventListener('click', (e) => {
+                    e.preventDefault();
+                    getMeme();
+                });
+                       
+
+        
+        }
+    </script>
+
+</head>
+<body>
+    <input type="text" name="template" placeholder="Enter template" id="template">
+    <input type="text" name="memeText" placeholder="Enter text" id="memeText">
+    <button id="generate">Generate</button>
+    <p></p>
+    <img id="imgurl" src="" width="350">
+    <p></p>
+    <input type="text" name="User name" placeholder="Enter name to add meme" id="uname">
+    <input type="password" name="Password" placeholder="Enter password" id="password">
+    <p id="response"></p>
+
+    <button id="addm">Add meme</button>
+    <p></p>
+    <button id="redirectBack">Back</button>
+    </form>
+</body>
+
+</html>

@@ -1,0 +1,13 @@
+[Unit]
+Description=Node.js Server
+After=network.target
+
+[Service]
+Type=simple
+User=node
+WorkingDirectory=/path/to/node/project
+ExecStart=/usr/bin/node server.js
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target

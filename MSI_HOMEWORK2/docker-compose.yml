@@ -1,0 +1,85 @@
+
+version: '3'
+
+services:
+  #db:
+  #  build: ./MySQL
+  #  
+  #  volumes:
+  #    - db_data:/var/lib/mysql
+  #  
+  #  ports:
+  #    - 3306:3306
+#
+  #  restart: always
+
+  db:
+    image: postgres
+
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    
+    restart: always
+    
+    ports:
+      - 5432:5432
+
+  back:
+    depends_on:
+      - db
+      
+    build: ./back
+
+    volumes:
+      - ./back:/home
+  
+    #ports:
+    #  - 8000:8000
+
+    command: 
+      - /bin/sh
+      - -c
+      - |
+        python3 manage.py migrate
+        python3 manage.py runserver 0.0.0.0:8000
+
+
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+
+    
+
+    restart: always
+    
+  front:
+    build: ./front
+
+    volumes:
+      - ./front:/home
+
+
+    #ports:
+    #  - 3000:3000
+
+  nginx:
+    image: nginx
+    
+    depends_on:
+      - front
+      - back
+      - db
+      
+    volumes:
+      - ./nginx/nginx.conf:/etc/nginx/nginx.conf
+    ports:
+      - 80:80
+    
+    #build: ./nginx
+
+  
+
+
+volumes:
+  db_data:

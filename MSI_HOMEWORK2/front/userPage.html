@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en" and dir="Itr">
+<head>
+    <meta charset="utf-8">
+    <title>  </title>
+    <script>
+        const getData = async() => {
+            const uname = document.getElementById("username").value;
+            console.log(uname);
+            const response = await fetch('http://localhost/api/users/' + uname);
+            const data = await response.json();
+            console.log(data);
+            if (response.status == 404) {
+                document.getElementById("noexist").innerHTML = "No user with such name!";
+                return;
+            }
+            document.getElementById("noexist").innerHTML = uname + "'s memes:";
+            console.log(data.memes);
+
+            ul = document.getElementById('list');
+
+            for (const meme of data.memes) {
+                li = document.createElement('li');
+                img = document.createElement('img');
+                img.src = meme;
+                img.style.width="350px";
+                li.appendChild(img);
+                ul.appendChild(li);
+            }
+            return(data);
+        };
+
+        window.onload = () => {
+            document.getElementById("redirectU").addEventListener('click', () => {
+                    window.location.href = 'http://localhost';
+                });
+            }
+
+    </script>
+
+
+</head>
+<body>
+    <title> Look up User</title>
+    <input type="text" name="username" placeholder="Enter Username" id="username"/>
+    
+    <p id="noexist"></p>
+
+    <input type="button" name="" value="Look up" onclick=getData()>
+    
+    <ul id="list"> </ul>
+    
+    <button id="redirectU">Back</button>
+    
+    </form>
+</body>
+<style>li{list-style: none;}</style>
+</html>
+
+
+
+

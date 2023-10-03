@@ -1,0 +1,37 @@
+source_image: ubuntu/bionic64
+package_update: true
+package_upgrade: true
+
+
+#hostname: django-backend
+
+packages:
+  - git
+  - python3-pip
+
+#write_files:
+#  - path: ./msi1
+#    permissions: '0644'
+#    content: |
+#      $(base64 -w 0 /root/.ssh/msi1)
+
+write_files:
+  - path: /.ssh/id_rsa
+    permissions: '0644'
+    content: |
+      -----BEGIN OPENSSH PRIVATE KEY-----
+      b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZWQyNTUxOQAAACDPGRwjuNA7OKBDBpq93hunImLk813ciEbuPZxJRjlCNAAAAJhNKWwwTSlsMAAAAAtzc2gtZWQyNTUxOQAAACDPGRwjuNA7OKBDBpq93hunImLk813ciEbuPZxJRjlCNAAAAEAGuESCcAfLyGTuidAeyBOcLJ9FKHDzPLy1IVLH+3zuO88ZHCO40Ds4oEMGmr3eG6ciYuTzXdyIRu49nElGOUI0AAAAE21yLnNsYWlyeUBnbWFpbC5jb20BAg==
+      -----END OPENSSH PRIVATE KEY-----
+
+#  - copy-data:
+#    src: ./msi1
+#    dest: /root/.ssh/
+
+runcmd:
+  #- touch ~/.ssh/msi1
+  #- echo '-----BEGIN OPENSSH PRIVATE KEY-----b3BlbnNzaC1rZXktdjEAAAAABG5vbmUAAAAEbm9uZQAAAAAAAAABAAAAMwAAAAtzc2gtZWQyNTUxOQAAACDPGRwjuNA7OKBDBpq93hunImLk813ciEbuPZxJRjlCNAAAAJhNKWwwTSlsMAAAAAtzc2gtZWQyNTUxOQAAACDPGRwjuNA7OKBDBpq93hunImLk813ciEbuPZxJRjlCNAAAAEAGuESCcAfLyGTuidAeyBOcLJ9FKHDzPLy1IVLH+3zuO88ZHCO40Ds4oEMGmr3eG6ciYuTzXdyIRu49nElGOUI0AAAAE21yLnNsYWlyeUBnbWFpbC5jb20BAg==-----END OPENSSH PRIVATE KEY-----' >> ~/.ssh/msi1
+
+  - apt-get update && apt get upgrade -y
+  - pip3 install django
+  - pip3 install -r requirements.txt
+  #- python3 manage.py runserver 0.0.0.0:8000
