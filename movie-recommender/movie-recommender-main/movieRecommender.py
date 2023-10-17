@@ -13,7 +13,7 @@ from os.path import join
 from scipy.sparse import issparse
 import collections
 import random
-#
+
 
 class MovieRecommender:
     def __init__(self):
