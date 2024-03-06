@@ -8,11 +8,14 @@
 #include "stm32h7xx_hal_sai.h"
 #include "stm32h7xx_hal_dma.h"
 
-#define BUFFER_SIZE 1024
 #define AUDIO_FREQUENCY_11K 11025U
 #define AUDIO_FREQUENCY_16K 16000U
 #define AUDIO_FREQUENCY_22K 22050U
 #define AUDIO_FREQUENCY_44K 44100U
+#define AUDIO_FREQUENCY AUDIO_FREQUENCY_16K
+#define BUFFER_SIZE 4096
+
+#define PDM_BUFFER_SIZE (uint32_t) 128*AUDIO_FREQUENCY/16000*2)
 //#define UNUSED(x) ((void)(x))
 
 extern volatile uint16_t pdm_buffer[BUFFER_SIZE];

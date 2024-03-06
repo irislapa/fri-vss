@@ -3,23 +3,20 @@
 
 #include "audio.h"
 
-volatile uint16_t pdm_buffer[BUFFER_SIZE];
-volatile uint16_t pcm_buffer[BUFFER_SIZE];
 
 
 SAI_HandleTypeDef hsaia4; // SAI4 BLOCK A handle
 DMA_HandleTypeDef hdma_saia4; // DMA handle
-
-
+ALIGN_32BYTES (uint16_t pdm_buffer[AUDIO_IN_PDM_BUFFER_SIZE]) __attribute__((section(".RAM_D3")));
+volatile uint16_t pcm_buffer[BUFFER_SIZE];
+static PDM_Filter_Handler_t PDM1_filter_handler;
+static PDM_Filter_Config_t PDM_filter_config;
 
 
 uint32_t audio_Init(){
-	uint32_t status = 0;
-	MX_SAI4_ClockConfig(AUDIO_FREQUENCY_16K);
+	MX_SAI4_ClockConfig(&hsaia4, 16000);
 	MX_SAI4_Init(&hsaia4);
-
-
-	return status;
+    PDM2PCM_Init();
 }
 
 void audio_DeInit() {
@@ -29,27 +26,21 @@ void audio_DeInit() {
 
 
 // clock configuration for SAI4A
-HAL_StatusTypeDef MX_SAI4_ClockConfig(uint32_t SampleRate)
+HAL_StatusTypeDef MX_SAI4_ClockConfig(SAI_HandleTypeDef hsai, uint32_t SampleRate)
 {
   /* Prevent unused argument(s) compilation warning */
-  UNUSED(hsaia4);
+  UNUSED(hsai);
 
   HAL_StatusTypeDef ret = HAL_OK;
   RCC_PeriphCLKInitTypeDef rcc_ex_clk_init_struct;
   HAL_RCCEx_GetPeriphCLKConfig(&rcc_ex_clk_init_struct);
 
   /* Set the PLL configuration according to the audio frequency */
-  if((SampleRate == AUDIO_FREQUENCY_11K) || (SampleRate == AUDIO_FREQUENCY_22K) || (SampleRate == AUDIO_FREQUENCY_44K))
-  {
-    rcc_ex_clk_init_struct.PLL2.PLL2P = 38;
-    rcc_ex_clk_init_struct.PLL2.PLL2N = 429;
-  }
-  else /* AUDIO_FREQUENCY_8K, AUDIO_FREQUENCY_16K, AUDIO_FREQUENCY_32K, AUDIO_FREQUENCY_48K, AUDIO_FREQUENCY_96K */
-  {
-    rcc_ex_clk_init_struct.PLL2.PLL2P = 7;
-    rcc_ex_clk_init_struct.PLL2.PLL2N = 344;
-  }
-  /* SAI clock config */
+
+  rcc_ex_clk_init_struct.PLL2.PLL2P = 7;
+  rcc_ex_clk_init_struct.PLL2.PLL2N = 344;
+
+    /* SAI clock config */
   rcc_ex_clk_init_struct.PeriphClockSelection = RCC_PERIPHCLK_SAI4A;
   rcc_ex_clk_init_struct.Sai4AClockSelection = RCC_SAI4ACLKSOURCE_PLL2;
   rcc_ex_clk_init_struct.PLL2.PLL2Q = 1;
@@ -59,7 +50,6 @@ HAL_StatusTypeDef MX_SAI4_ClockConfig(uint32_t SampleRate)
   {
     ret = HAL_ERROR;
   }
-
   return ret;
 }
 
@@ -112,6 +102,23 @@ void MX_SAI4_Init(SAI_HandleTypeDef *hsai)
   /* USER CODE END SAI4_Init 2 */
 
 }
+
+int32 PDM2PCM_Init() {
+	__HAL_RCC_CRC_CLK_ENABLE();
+	PDM1_filter_handler.bit_order = PDM_FILTER_BIT_ORDER_LSB;
+	PDM1_filter_handler.endianness = PDM_FILTER_ENDIANNESS_LE;
+	PDM1_filter_handler.high_pass_tap = 2122358088;
+	PDM1_filter_handler.out_ptr_channels = 1;
+	PDM1_filter_handler.in_ptr_channels = 1;
+	PDM1_filter_handler.pInternalMemory = &pdm_filter[0];
+
+    PDM_filter_config.output_samples_number = AUDIO_FREQUENCY/1000;
+    PDM_filter_config.mic_gain = 24;
+    PDM_filter_config.decimation_factor = (uint16_t) 0x002;
+
+}
+
+
 static uint32_t SAI4_client =0;
 
 void HAL_SAI_MspInit(SAI_HandleTypeDef *hsai) {
@@ -211,28 +218,31 @@ void HAL_SAI_MspDeInit(SAI_HandleTypeDef* saiHandle)
     }
 }
 
-PDM2PCM_Convert(uint16_t *PDMBuf, uint16_t *PCMBuf) {
-	// Convert PDM data to PCM data
-	// PDMBuf is the input buffer containing PDM data
-	// PCMBuf is the output buffer for PCM data
-	// ...
-
-	PDM_Filter(PDMBuf, PCMBuf, &PDM1_filter_handler);
-}
-
 
 void HAL_SAI_RxHalfCpltCallback(SAI_HandleTypeDef *hsai)
 {
-    // Assuming 'pdmBuffer' is where PDM data is stored and 'pcmBuffer' is for PCM data
-    // Process first half of PDM buffer to get PCM data
 	if (hsai->Instance == SAI4_Block_A) {
-		PDM2PCM_Convert(&pdm_buffer[0], &pcm_buffer[0]);
-	}
+
+		SCB_InvalidateDCache_by_Addr((uint32_t *)&recordPDMBuf[0], AUDIO_IN_PDM_BUFFER_SIZE*2);
+
+		PDM_Filter(&pdm_buffer, &pcm_buffer, &PDM1_filter_handler);
+
+		SCB_CleanDCache_by_Addr((uint32_t*)&RecPlayback[playbackPtr], AUDIO_IN_PDM_BUFFER_SIZE/4);
+
+	}    // Assuming 'pdmBuffer' is where PDM data is stored and 'pcmBuffer' is for PCM data
+
     // Optionally, play or process PCM data here
 }
 void HAL_SAI_RxCpltCallback(SAI_HandleTypeDef *hsai) {
+
 	if (hsai->Instance == SAI4_Block_A) {
+
+		SCB_InvalidateDCache_by_Addr((uint32_t *)&recordPDMBuf[0], AUDIO_IN_PDM_BUFFER_SIZE*2);
+
 		PDM_Filter(&pdm_buffer, &pcm_buffer, &PDM1_filter_handler);
+
+		SCB_CleanDCache_by_Addr((uint32_t*)&RecPlayback[playbackPtr], AUDIO_IN_PDM_BUFFER_SIZE/4);
+
 	}
 }
 
