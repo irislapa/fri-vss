@@ -66,8 +66,8 @@ all: main-build
 main-build: guitar-tuner-with-BSP.elf secondary-outputs
 
 # Tool invocations
-guitar-tuner-with-BSP.elf guitar-tuner-with-BSP.map: $(OBJS) $(USER_OBJS) /home/irinej/STM32CubeIDE/workspace_1.14.0/guitar-tuner-with-BSP/STM32H750XBHX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
-	arm-none-eabi-gcc -o "guitar-tuner-with-BSP.elf" @"objects.list" $(USER_OBJS) -Wl,--start-group $(LIBS) -Wl,--end-group -mcpu=cortex-m7 -T"/home/irinej/STM32CubeIDE/workspace_1.14.0/guitar-tuner-with-BSP/STM32H750XBHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="guitar-tuner-with-BSP.map" -Wl,--gc-sections -static -L../Middlewares/ST/STM32_Audio/Addons/PDM/Lib --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+guitar-tuner-with-BSP.elf guitar-tuner-with-BSP.map: $(OBJS) $(USER_OBJS) /home/irinej/guitar-tuner-with-BSP/STM32H750XBHX_FLASH.ld makefile objects.list $(OPTIONAL_TOOL_DEPS)
+	arm-none-eabi-gcc -o "guitar-tuner-with-BSP.elf" @"objects.list" $(USER_OBJS) -Wl,--start-group $(LIBS) -Wl,--end-group -mcpu=cortex-m7 -T"/home/irinej/guitar-tuner-with-BSP/STM32H750XBHX_FLASH.ld" --specs=nosys.specs -Wl,-Map="guitar-tuner-with-BSP.map" -Wl,--gc-sections -static -L../Middlewares/ST/STM32_Audio/Addons/PDM/Lib --specs=nano.specs -mfpu=fpv5-d16 -mfloat-abi=hard -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
 	@echo 'Finished building target: $@'
 	@echo ' '
 

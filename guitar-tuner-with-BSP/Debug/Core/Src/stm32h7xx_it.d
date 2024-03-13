@@ -50,11 +50,34 @@ Core/Src/stm32h7xx_it.o: ../Core/Src/stm32h7xx_it.c ../Core/Inc/main.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_fmc.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi_ex.h \
+ ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h \
+ ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h \
  ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h \
+ ../Drivers/BSP/stm32h750b_discovery.h \
+ ../Drivers/BSP/stm32h750b_discovery_conf.h \
+ ../Drivers/BSP/stm32h750b_discovery_errno.h \
+ ../Drivers/BSP/stm32h750b_discovery_lcd.h \
+ ../Drivers/BSP/Components/Common/lcd.h \
+ ../Drivers/BSP/Components/rk043fn48h/rk043fn48h.h \
+ ../Drivers/BSP/stm32h750b_discovery_ts.h \
+ ../Drivers/BSP/Components/ft5336/ft5336.h \
+ ../Drivers/BSP/Components/ft5336/ft5336_reg.h \
+ ../Drivers/BSP/Components/ft5336/ft5336_conf.h \
+ ../Drivers/BSP/stm32h750b_discovery_audio.h \
+ ../Drivers/BSP/Components/wm8994/wm8994.h \
+ ../Drivers/BSP/Components/wm8994/wm8994_reg.h \
+ ../Drivers/CMSIS/Include/cmsis_compiler.h \
+ ../Drivers/BSP/Components/Common/audio.h \
+ ../Middlewares/ST/STM32_Audio/Addons/PDM/Inc/pdm2pcm_glo.h \
+ ../Drivers/BSP/stm32h750b_discovery_mmc.h \
+ ../Drivers/BSP/stm32h750b_discovery_sdram.h \
+ ../Drivers/BSP/Components/mt48lc4m32b2/mt48lc4m32b2.h \
+ ../Drivers/BSP/Components/mt48lc4m32b2/mt48lc4m32b2_conf.h \
+ ../Drivers/STM32H7xx_HAL_Driver/Inc/../Inc/stm32h7xx_hal.h \
  ../Core/Inc/stm32h7xx_it.h
 ../Core/Inc/main.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal.h:
@@ -108,9 +131,32 @@ Core/Src/stm32h7xx_it.o: ../Core/Src/stm32h7xx_it.c ../Core/Inc/main.h \
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_fmc.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_spi_ex.h:
+../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim.h:
+../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_tim_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_uart_ex.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_ll_usb.h:
 ../Drivers/STM32H7xx_HAL_Driver/Inc/stm32h7xx_hal_pcd_ex.h:
+../Drivers/BSP/stm32h750b_discovery.h:
+../Drivers/BSP/stm32h750b_discovery_conf.h:
+../Drivers/BSP/stm32h750b_discovery_errno.h:
+../Drivers/BSP/stm32h750b_discovery_lcd.h:
+../Drivers/BSP/Components/Common/lcd.h:
+../Drivers/BSP/Components/rk043fn48h/rk043fn48h.h:
+../Drivers/BSP/stm32h750b_discovery_ts.h:
+../Drivers/BSP/Components/ft5336/ft5336.h:
+../Drivers/BSP/Components/ft5336/ft5336_reg.h:
+../Drivers/BSP/Components/ft5336/ft5336_conf.h:
+../Drivers/BSP/stm32h750b_discovery_audio.h:
+../Drivers/BSP/Components/wm8994/wm8994.h:
+../Drivers/BSP/Components/wm8994/wm8994_reg.h:
+../Drivers/CMSIS/Include/cmsis_compiler.h:
+../Drivers/BSP/Components/Common/audio.h:
+../Middlewares/ST/STM32_Audio/Addons/PDM/Inc/pdm2pcm_glo.h:
+../Drivers/BSP/stm32h750b_discovery_mmc.h:
+../Drivers/BSP/stm32h750b_discovery_sdram.h:
+../Drivers/BSP/Components/mt48lc4m32b2/mt48lc4m32b2.h:
+../Drivers/BSP/Components/mt48lc4m32b2/mt48lc4m32b2_conf.h:
+../Drivers/STM32H7xx_HAL_Driver/Inc/../Inc/stm32h7xx_hal.h:
 ../Core/Inc/stm32h7xx_it.h:

@@ -8,6 +8,7 @@
 "./Core/Src/syscalls.o"
 "./Core/Src/sysmem.o"
 "./Core/Src/system_stm32h7xx.o"
+"./Core/Src/usart3_debug.o"
 "./Core/Startup/startup_stm32h750xbhx.o"
 "./Drivers/BSP/Components/ft5336/ft5336.o"
 "./Drivers/BSP/Components/ft5336/ft5336_reg.o"

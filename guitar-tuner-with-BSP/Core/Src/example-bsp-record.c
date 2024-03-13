@@ -22,8 +22,10 @@
 #include <stdio.h>
 //#include "stm32_lcd.h"
 #include "stm32_lcd.h"
+#include "usart3_debug.h"
 
 uint16_t micTest = 0;
+uint16_t micTest2 = 0;
 
 /** @addtogroup STM32H7xx_HAL_Examples
   * @{
@@ -113,7 +115,28 @@ char* Mute_State[2] = {
   */
 void AudioRecord_demo(void)
 {
+  printf("record demo\n\r");
    uint32_t channel_nbr = 2;
+
+  uint32_t x_size, y_size;
+
+  BSP_LCD_GetXSize(0, &x_size);
+  BSP_LCD_GetYSize(0, &y_size);
+
+  /* Clear the LCD */
+  UTIL_LCD_Clear(UTIL_LCD_COLOR_WHITE);
+  /* Set Audio Demo description */
+  UTIL_LCD_FillRect(0, 0, x_size, 90, UTIL_LCD_COLOR_BLUE);
+  UTIL_LCD_SetTextColor(UTIL_LCD_COLOR_WHITE);
+  UTIL_LCD_SetBackColor(UTIL_LCD_COLOR_BLUE);
+  UTIL_LCD_SetFont(&Font24);
+  UTIL_LCD_DisplayStringAt(0, 0, (uint8_t *)"AUDIO RECORD SAI PDM EXAMPLE", CENTER_MODE);
+  UTIL_LCD_SetFont(&Font16);
+  UTIL_LCD_DisplayStringAt(0, 24, (uint8_t *)"Make sure the SW2 is in position PDM ", CENTER_MODE);
+  UTIL_LCD_DisplayStringAt(0, 40,  (uint8_t *)"Press User button for next menu", CENTER_MODE);
+  /* Set the LCD Text Color */
+  UTIL_LCD_DrawRect(10, 100, x_size - 20, y_size - 110, UTIL_LCD_COLOR_BLUE);
+  UTIL_LCD_DrawRect(11, 101, x_size - 22, y_size - 112, UTIL_LCD_COLOR_BLUE);
 
   AudioFreq_ptr = AudioFreq+2; /* AUDIO_FREQUENCY_16K; */
 
@@ -133,24 +156,37 @@ void AudioRecord_demo(void)
   BSP_AUDIO_IN_Init(1, &AudioInInit);
   BSP_AUDIO_IN_GetState(1, &InState);
 
-  BSP_AUDIO_OUT_Init(0, &AudioOutInit);
 
   /* Start Recording */
-  BSP_AUDIO_IN_RecordPDM(1, (uint8_t*)&recordPDMBuf, 2*AUDIO_IN_PDM_BUFFER_SIZE);
+  UTIL_LCD_DisplayStringAt(0, 190, (uint8_t *)"Started recording", CENTER_MODE);
+  int32_t status = BSP_AUDIO_IN_RecordPDM(1, (uint8_t*)&recordPDMBuf, 2*AUDIO_IN_PDM_BUFFER_SIZE);
+  printf("%d\n\r", (int) status);
 
-  /* Play the recorded buffer*/
-  //BSP_AUDIO_OUT_Play(0, (uint8_t*)&RecPlayback[0], 2*AUDIO_BUFF_SIZE);
+  while (1)
+  {
+    UTIL_LCD_DisplayStringAt(0, 190, (uint8_t *)"checking for ui", CENTER_MODE);
 
+    if (CheckForUserInput() > 0)
+    {
+      ButtonState = 0;
+      BSP_AUDIO_IN_Stop(1);
+      BSP_AUDIO_IN_DeInit(1);
+      return;
+    }
+  }
 }
-
 /**
   * @brief Calculates the remaining file size and new position of the pointer.
   * @retval None
   */
 void BSP_AUDIO_IN_TransferComplete_CallBack(uint32_t Instance)
 {
+  UTIL_LCD_DisplayStringAt(0, 190, (uint8_t *)"bsp audio in tcc", CENTER_MODE);
+
+  printf("callback was called\r\n");
   if(Instance == 1U)
   {
+
         /* Invalidate Data Cache to get the updated content of the SRAM*/
     SCB_InvalidateDCache_by_Addr((uint32_t *)&recordPDMBuf[AUDIO_IN_PDM_BUFFER_SIZE/2], AUDIO_IN_PDM_BUFFER_SIZE*2);
 
@@ -159,7 +195,8 @@ void BSP_AUDIO_IN_TransferComplete_CallBack(uint32_t Instance)
     /* Clean Data Cache to update the content of the SRAM */
     SCB_CleanDCache_by_Addr((uint32_t*)&RecPlayback[playbackPtr], AUDIO_IN_PDM_BUFFER_SIZE/4);
 
-    micTest = recordPDMBuf[0];
+    micTest = RecPlayback[0];
+    micTest2 = PlaybackBuffer[0];
 
     playbackPtr += AUDIO_IN_PDM_BUFFER_SIZE/4/2;
     if(playbackPtr >= AUDIO_BUFF_SIZE)
