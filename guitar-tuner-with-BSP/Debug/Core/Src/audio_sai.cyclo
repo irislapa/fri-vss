@@ -1,0 +1,6 @@
+../Core/Src/audio_sai.c:42:6:Audio_Init	1
+../Core/Src/audio_sai.c:52:13:MX_SAI2_Init	2
+../Core/Src/audio_sai.c:71:13:MX_DMA2_Init	2
+../Core/Src/audio_sai.c:113:6:processBufferData	1
+../Core/Src/audio_sai.c:118:19:StartAudioDMA	1
+../Core/Src/audio_sai.c:123:5:calculateRMS	2
