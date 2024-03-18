@@ -1,9 +1,0 @@
-../Core/Src/audio.c:16:10:audio_Init	1
-../Core/Src/audio.c:25:6:audio_DeInit	1
-../Core/Src/audio.c:32:19:MX_SAI4_ClockConfig	5
-../Core/Src/audio.c:68:6:MX_SAI4_Init	2
-../Core/Src/audio.c:117:6:HAL_SAI_MspInit	4
-../Core/Src/audio.c:194:6:HAL_SAI_MspDeInit	3
-../Core/Src/audio.c:220:1:PDM2PCM_Convert	1
-../Core/Src/audio.c:230:6:HAL_SAI_RxHalfCpltCallback	1
-../Core/Src/audio.c:237:6:HAL_SAI_RxCpltCallback	2

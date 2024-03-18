@@ -1,3 +1,0 @@
-../Core/Src/example-bsp-record.c:116:6:AudioRecord_demo	32	static
-../Core/Src/example-bsp-record.c:182:6:BSP_AUDIO_IN_TransferComplete_CallBack	48	static,ignoring_inline_asm
-../Core/Src/example-bsp-record.c:216:6:BSP_AUDIO_IN_HalfTransfer_CallBack	48	static,ignoring_inline_asm

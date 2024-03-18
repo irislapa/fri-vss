@@ -1,7 +1,0 @@
-../Core/Src/audio_play.c:101:6:AudioPlay_demo	25
-../Core/Src/audio_play.c:285:20:AUDIO_Start	2
-../Core/Src/audio_play.c:312:17:GetData	3
-../Core/Src/audio_play.c:332:9:AUDIO_Process	11
-../Core/Src/audio_play.c:400:6:BSP_AUDIO_OUT_TransferComplete_CallBack	2
-../Core/Src/audio_play.c:414:6:BSP_AUDIO_OUT_HalfTransfer_CallBack	2
-../Core/Src/audio_play.c:428:6:BSP_AUDIO_OUT_Error_CallBack	1
