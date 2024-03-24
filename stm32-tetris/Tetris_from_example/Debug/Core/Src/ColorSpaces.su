@@ -1,0 +1,2 @@
+../Core/Src/ColorSpaces.c:5:6:HSVtoRGB	64	static
+../Core/Src/ColorSpaces.c:35:10:RGB888_to_RGB565	24	static

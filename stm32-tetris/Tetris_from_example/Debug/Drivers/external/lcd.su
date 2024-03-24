@@ -1,0 +1,8 @@
+../Drivers/external/lcd.c:23:13:LCD_IO_Init	8	static
+../Drivers/external/lcd.c:43:6:LCD_FillRect	32	static
+../Drivers/external/lcd.c:62:6:LCD_Tetromino	32	static
+../Drivers/external/lcd.c:77:6:LCD_PlayingField	32	static
+../Drivers/external/lcd.c:93:6:LCD_TetrisFrame	48	static
+../Drivers/external/lcd.c:105:6:LCD_Init	8	static
+../Drivers/external/lcd.c:127:6:LCD_SetBacklight	16	static
+../Drivers/external/lcd.c:138:6:LCD_ClearScreen	8	static

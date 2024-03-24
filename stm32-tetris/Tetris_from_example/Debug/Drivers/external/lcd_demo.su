@@ -1,0 +1,2 @@
+../Drivers/external/lcd_demo.c:9:6:LCD_Intro_LogoSlide	16	static
+../Drivers/external/lcd_demo.c:33:6:LCD_Intro_NoProgramHalt	24	static

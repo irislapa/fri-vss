@@ -1,0 +1,16 @@
+../Drivers/CMSIS/Include/core_cm4.h:1667:26:__NVIC_GetPriorityGrouping	4	static
+../Drivers/CMSIS/Include/core_cm4.h:1679:22:__NVIC_EnableIRQ	16	static,ignoring_inline_asm
+../Drivers/CMSIS/Include/core_cm4.h:1809:22:__NVIC_SetPriority	16	static
+../Drivers/CMSIS/Include/core_cm4.h:1856:26:NVIC_EncodePriority	40	static
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:2193:22:LL_TIM_EnableARRPreload	16	static
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:3986:22:LL_TIM_SetTriggerOutput	16	static
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:4092:22:LL_TIM_DisableMasterSlaveMode	16	static
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_bus.h:913:22:LL_APB1_GRP1_EnableClock	24	static
+../Core/Src/tim.c:33:6:MX_TIM5_Init	64	static
+../Core/Src/tim.c:97:6:MX_TIM6_Init	32	static
+../Core/Src/tim.c:129:6:MX_TIM8_Init	120	static
+../Core/Src/tim.c:221:6:MX_TIM15_Init	120	static
+../Core/Src/tim.c:292:6:MX_TIM20_Init	120	static
+../Core/Src/tim.c:384:6:HAL_TIM_Base_MspInit	32	static
+../Core/Src/tim.c:432:6:HAL_TIM_MspPostInit	56	static
+../Core/Src/tim.c:530:6:HAL_TIM_Base_MspDeInit	16	static

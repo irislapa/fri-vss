@@ -1,0 +1,10 @@
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_gpio.h:813:26:LL_GPIO_IsInputPinSet	16	static
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:2013:22:LL_TIM_EnableCounter	16	static
+../Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_ll_tim.h:5913:22:LL_TIM_EnableIT_UPDATE	16	static
+../System/kbd.c:116:6:KBD_init	16	static
+../System/kbd.c:172:6:KBD_scan	16	static
+../System/kbd.c:205:16:KBD_get_pressed_key	16	static
+../System/kbd.c:219:20:KBD_get_button_state	16	static
+../System/kbd.c:231:13:KBD_scan_Callback	8	static
+../System/kbd.c:246:6:KBD_demo	16	static
+../System/kbd.c:314:6:KBD_demo_Timer_IRQ_scan	16	static
