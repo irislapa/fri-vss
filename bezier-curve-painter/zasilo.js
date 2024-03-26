@@ -15,11 +15,8 @@ window.addEventListener('DOMContentLoaded', (event) => {
     let drawingNewCurve = false;    
     let splineArr = [];
     let dragPoint = [];
-    let nearCurves = [];
-    let makeCont= false; 
+       
 
-   
-    
     canvas.addEventListener("mousedown", function(e) {
         const rect = canvas.getBoundingClientRect();
         const x = e.clientX - rect.left;
@@ -30,14 +27,6 @@ window.addEventListener('DOMContentLoaded', (event) => {
         switch(i) {
             case -1:
                 splineArr.push(new Bezier([new Vector([x, y]), new Vector([x, y]), new Vector([x, y]), new Vector([x, y])]));
-                [i, j] = nearAnchorPoints(x, y);
-                if (splineArr.length == 1) {
-                    nearCurves.push(new Bezier([new Vector([x, y]), new Vector([x, y]), new Vector([x, y]), new Vector([x, y])]));
-                }
-                if (i != -1) {
-                    nearCurves.push(new Bezier([new Vector([i, j]), new Vector([x, y]), new Vector([x, y]), new Vector([x, y])]));
-                }
-
                 drawingNewCurve = true;
                 redraw();
             break;
@@ -67,21 +56,26 @@ window.addEventListener('DOMContentLoaded', (event) => {
         } 
     });
 
-     
+    
     canvas.addEventListener("mouseup", function(e) {
         draggingControlPoint = false;
         if (drawingNewCurve) {
             drawingNewCurve = false;
+            console.log(splineArr[splineArr.length-1].toArray()[0].toArray()[0]);
+            console.log(splineArr[splineArr.length-1].toArray()[3].toArray()[0]);
            if ((splineArr[splineArr.length-1].toArray()[0].toArray()[0] == splineArr[splineArr.length-1].toArray()[3].toArray()[0]) &&
                 (splineArr[splineArr.length-1].toArray()[0].toArray()[1] == splineArr[splineArr.length-1].toArray()[3].toArray()[1])) {
                  splineArr.pop();
             }           
             else {
+                console.log("where is the last bezier curve");
                 straightCurve(splineArr[splineArr.length-1]);
             }
         }
         redraw();
     });
+
+
 
     // when you initially draw a bezier, it sets the control points so the curve is a straight line
     function straightCurve(bezier) {
@@ -102,15 +96,14 @@ window.addEventListener('DOMContentLoaded', (event) => {
             let offsetX, offsetY;
 
             // For vertical lines, adjust the Y offset instead of X
-            if (-1 > dx || dx > 1) {
+            if (-5 > dx > 5) {
                 // For non-vertical lines, calculate slope and adjust control points accordingly
                 const slope = dy / dx;
-
-                offsetX = 50
-                offsetY = slope;
+                offsetX = 50;
+                offsetY = offsetX * slope;
 
                 // Set the control points using the calculated offsets
-                bezier.setCPoint(1, new Vector([midX - offsetX, midY + offsetY]));
+                bezier.setCPoint(1, new Vector([midX - offsetX, midY - offsetY]));
                 bezier.setCPoint(2, new Vector([midX + offsetX, midY + offsetY]));
             } else {
                 // For vertical lines, set control points directly above and below the midpoint
@@ -137,68 +130,42 @@ window.addEventListener('DOMContentLoaded', (event) => {
         return [-1, -1]; // Return -1 if no control point is near
     }
 
-    function nearAnchorPoints(x, y) {
-        // Check if clicking near an anchor point
-        for (let i = 0; i < splineArr.length; i++) {
-
-            let spline1x = splineArr[i].toArray()[0].toArray()[0];
-            let spline1y = splineArr[i].toArray()[0].toArray()[1];
-            let spline2x = splineArr[i].toArray()[3].toArray()[0];
-            let spline2y = splineArr[i].toArray()[3].toArray()[1];
-            if (Math.abs(x - spline1x) < 10 && Math.abs(y - spline1y) < 10) {
-                return [spline1x, spline1y]; // Return the index of the near anchor point
-            }     
-            if (Math.abs(x - spline2x) < 10 && Math.abs(y - spline2y) < 10) {
-                return [spline2x, spline2y]; // Return the index of the near anchor point
-            }
-        }
-        return [-1, -1]; // Return -1 if no anchor point is near
-    }
-
     function redraw() {
+        //ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        console.log(drawingNewCurve);
+        
         if (drawingNewCurve) {
             temporaryLine(splineArr[splineArr.length-1].toArray()[0], splineArr[splineArr.length-1].toArray()[3]);
         }
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-        for (let i = 0; i < splineArr.length; i++) {
-            drawBezier(splineArr[i]);
-        }
-           
-        // hardcoded for 2 anchor and 2 control points per bezier curve
-        for (let i = 0; i < splineArr.length; i++) {
-            // mark 2 anchor points of the curve
-            drawCircle(splineArr[i].toArray()[0].toArray()[0], splineArr[i].toArray()[0].toArray()[1]);
-            drawCircle(splineArr[i].toArray()[3].toArray()[0], splineArr[i].toArray()[3].toArray()[1]);
-
-            // mark 2 control points of the curve
-            drawRect(splineArr[i].toArray()[1].toArray()[0], splineArr[i].toArray()[1].toArray()[1]); 
-            drawRect(splineArr[i].toArray()[2].toArray()[0], splineArr[i].toArray()[2].toArray()[1]);
-
-            // draw control lines between anchor points and control points (2 for each bezier curve)
-            drawControlLines(splineArr[i].toArray()[0], splineArr[i].toArray()[1]);
-            drawControlLines(splineArr[i].toArray()[3], splineArr[i].toArray()[2]);
-        }
-
-        if (makeCont) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
-            for (let i = 0; i < nearCurves.length; i++) {
-                drawBezier(nearCurves[i]);
+            console.log(splineArr);
+            for (let i = 0; i < splineArr.length; i++) {
+                console.log(splineArr[i].toArray());
+                drawBezier(splineArr[i]);
             }
-            makeCont = false;
-        }
+
+            console.log("drawing control points");
+           
+            // hardcoded for 2 anchor and 2 control points per bezier curve
+            for (let i = 0; i < splineArr.length; i++) {
+                // mark 2 anchor points of the curve
+                drawCircle(splineArr[i].toArray()[0].toArray()[0], splineArr[i].toArray()[0].toArray()[1]);
+                drawCircle(splineArr[i].toArray()[3].toArray()[0], splineArr[i].toArray()[3].toArray()[1]);
+
+                // mark 2 control points of the curve
+                drawRect(splineArr[i].toArray()[1].toArray()[0], splineArr[i].toArray()[1].toArray()[1]); 
+                drawRect(splineArr[i].toArray()[2].toArray()[0], splineArr[i].toArray()[2].toArray()[1]);
+
+                // draw control lines between anchor points and control points (2 for each bezier curve)
+                drawControlLines(splineArr[i].toArray()[0], splineArr[i].toArray()[1]);
+                drawControlLines(splineArr[i].toArray()[3], splineArr[i].toArray()[2]);
+                console.log(i);
+            }
     }
 
-    function makeContinuous() {
-        makeCont = true;
-        console.log("makeContinuous");
-        const s = new Spline(nearCurves);
-        s.makeContinuous();
-        redraw();
-    }    
-    document.getElementById('mc').addEventListener('click', makeContinuous);
 
-
-    function drawBezier(bezierCurve) {
+   function drawBezier(bezierCurve) {
         // Start by moving to the first anchor point
         ctx.beginPath();
         ctx.moveTo(bezierCurve.toArray()[0][0], bezierCurve.toArray()[0][1]);

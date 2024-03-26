@@ -60,4 +60,11 @@ export class Spline {
 
         }
     }
+
+    addCurve(curve) {
+        this.curves.push(curve);
+    }
+
+    static 
+
 }

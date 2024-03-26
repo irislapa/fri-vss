@@ -9,32 +9,15 @@
 
 <body>
     <div class="main-div">
+        <!-- Instructional text above the canvas -->
+        <p>Hold down and drag mouse to draw a curve, 2 red squares will appear, that you can drag arround to manipulate the curve</p>
+        
         <div id="canvas">
             <canvas id="mainCanvas"></canvas>
-
-        </div>
-
-
-        <div class="tool-main" id="tool-mainID">
-            <div id="tool-tool">
-                <ul id="toolbox-buttons">
-                    <li><button id="buttonNew" class="buttons">New</button></li>
-                    <li><input type="color" class="buttons" id="colorChoose"></li>
-                    <li><button id="buttonColor" class="buttons">Set Color</button></li>
-                    <li><button id="buttonDelete" class="buttons">Delete Spline</button></li>
-                    <li><label class="switch">Toggle move:<input id="moveSwitch" type="checkbox"><span class="slider"></span>
-                        </label></li>
-                    <li>Editing: <label id="currentSpline"></label></li>
-                </ul>
-            </div>
-            <div id="tool-listsplines">
-                <h>List of splines:</h>
-                <ul id="list-splines"></ul>
-            </div>
         </div>
     </div>
+    <button class="buttons curveButton" id="mc">make continuous</button>
+    <script type="module" src="Draw.js"></script>
+
 </body>
-
-<script type="module" src="Draw.js"></script>
-
 </html>

@@ -7,6 +7,10 @@ export class Bezier {
         this.arrV = points;
     }
 
+    toArray() {
+        return this.arrV;
+    }
+
     value(t) {
         let n = this.arrV.length-1;
         let result = this.arrV[0].mulScalar(new Bernstein(n, 0).value(t));
@@ -23,5 +27,13 @@ export class Bezier {
             result = result.add(((this.arrV[i+1].sub(this.arrV[i])).mulScalar(n)).mulScalar(new Bernstein(n-1, i).value(t)));
         }
         return result;
+    }
+
+    setCPoint(point, vector) {
+        this.arrV[point] = vector;
+    }
+
+    setAPoint(point, vector) {
+        this.arrV[point] = vector;
     }
 }
