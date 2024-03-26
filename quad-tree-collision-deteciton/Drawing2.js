@@ -2,12 +2,9 @@ import { QuadTree } from "./QuadTree.js";
 import { Quad } from "./Quad.js";
 import { Point } from "./Point.js";
 
-//let addingPoints = false;
 
 function addPoints(ctx, allPoints, qt, n) {
-    //if (maxPoints <= pointCount) {
-    //    return;
-    //}
+
     if (allPoints.length < n) {
         let nn = n - allPoints.length;
         for (let i = 0; i < nn ; i++) {
@@ -105,12 +102,7 @@ window.addEventListener("load", () => {
     ctx.stroke();
     let rect = new Quad(0, 0, 700, 700);
     const qt = new QuadTree(rect, 4);
-    //let addingPoints = false;
-    /* canvas.addEventListener("mousedown", startPosition);
-    canvas.addEventListener("mouseup", endPosition);
-    canvas.addEventListener("mousemove", addPoints); */
-    //document.querySelector('.messageCheckbox').checked;
-    //let drawGrid = document.querySelector('.grid:checked').value;
+
 
     let drawGrid = document.getElementById("grid").checked;
     let allPoints = [];

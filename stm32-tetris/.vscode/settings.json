@@ -1,0 +1,32 @@
+{
+    "files.associations": {
+        "*.rmd": "markdown",
+        "*.vhd": "vhdl",
+        "pdm2pcm.h": "c",
+        "stm32h7xx_hal_qspi.h": "c",
+        "mt25tl01g.h": "c",
+        "mt25tl01g_conf.h": "c",
+        "stm32h7xx.h": "c",
+        "mt48lc4m32b2.h": "c",
+        "mt48lc4m32b2_conf.h": "c",
+        "stm32h7xx_hal.h": "c",
+        "stm32h750b_discovery_lcd.h": "c",
+        "rk043fn48h.h": "c",
+        "lcd.h": "c",
+        "stm32h750b_discovery_ts.h": "c",
+        "stm32h750b_discovery_sdram.h": "c",
+        "stm32h750b_discovery_bus.h": "c",
+        "stm32h750b_discovery_mmc.h": "c",
+        "stm32h7xx_hal_mmc.h": "c",
+        "stm32h750b_discovery_errno.h": "c",
+        "stm32h750b_discovery_conf.h": "c",
+        "usart3_debug.h": "c",
+        "example-bsp-record.h": "c",
+        "audio.h": "c",
+        "pdm2pcm_glo.h": "c",
+        "stm32h750b_discovery_audio.h": "c",
+        "main.h": "c"
+    },
+    "cortex-debug.gdbPath": "/usr/share/gcc-arm-none-eabi-10.3-2021.10/bin/arm-none-eabi-gdb",
+    "cortex-debug.stutilPath": "/usr/local/share/stlink/bin/st-util"
+}
