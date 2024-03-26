@@ -477,9 +477,11 @@ __global__ void CalculateCDF_we_mbcf(unsigned int* histogram, unsigned int *cdf)
 \vspace{0.3cm}
 % Explanation and process of histogram equalization.
 The new (equalized) grayscale value is calculated for each pixel like so:\\\\
-\begin{equation}
-l_{\text{new}} = \frac{\text{cdf}(l) - \text{cdf}_{\text{min}}}{(N \times M) - \text{cdf}_{\text{min}}} \times (L - 1)
-\end{equation}
+\begin{equation*}
+    {\text{new}} = \frac{\text{cdf}(l) - \text{cdf}_{\text{min}}}{(N \times M) - \text{cdf}_{\text{min}}} \times (L - 1)
+\end{equation*}
+
+\vspace{0.3cm}
 
 
 - $l_{new}$ ... being the new value,\\ - $(N \times M)$ ... being the size of an image,\\ - $cdf(l)$ ... being the number of pixels on input image with grayscale value $l$, \\ - $cdf_{min}$ ... being the smallest \textbf{non-zero} value in CDF histogram, 0-s represent no accumulation in the histogram\\ 
@@ -552,11 +554,12 @@ __global__ void EqualizeKernel(unsigned char * image_in, unsigned char * image_o
 
 I have tested my implementation on 7 different images of varying sizes.
 I used cudaEvent\_t sturct for timing the execution.
-I timed 3 different executions:
-- One where all 3 steps are in parallel (Cuda Parallel)
-- One where all 3 are sequential (Sequential)
+I timed 3 different executions: \\
+- One where all 3 steps are in parallel (Cuda Parallel) \\
+- One where all 3 are sequential (Sequential) \\
 - and One, where I implemented the kernels for sequential execution\\
 and ran only 1 thread (Kernel Sequential)
+For normalization purposes each implementation was run 10 times.
 
 \begin{table}[ht]
 \centering
@@ -580,7 +583,7 @@ buca1.jpg & 2560 x 1707 & 1.1806 ms & 110.7117 ms & 49685.0430 ms \\
 
 \begin{figure}[h]
 \centering
-\includegraphics[width=0.9\textwidth]{images/final_time_plot.jpg}
+\includegraphics[width=0.8\textwidth]{images/final_time_plot.jpg}
 \caption{Graph of times for parallel and sequential processing.}
 \label{fig:mbk}
 \end{figure}
@@ -699,7 +702,7 @@ flower1.jpg\\
     \caption{Equalized image}
     \label{fig:equalized-histogram}
   \end{subfigure}
-  \caption{Comparison of original and equalized histograms, for image buca1.jpg}
+  \caption{Comparison of original and equalized histograms, for image flower1.jpg}
 \end{figure}
 
 \pagebreak
@@ -714,7 +717,7 @@ Parallel processing is not always the optimal approach due to several limiting f
 
 
 \begin{equation}
-S_{\text{latency}}(s) = \frac{1}{(1 - p) + \frac{p}{s}}
+{\text{latency}}(s) = \frac{1}{(1 - p) + \frac{p}{s}}
 \end{equation}
 
 where
@@ -729,15 +732,12 @@ where
 According to Amdahl's Law, the speedup of a program using multiple processors in parallel computing is limited by the time needed for the sequential fraction of the program. For instance, if only 50\% of a program can be parallelized, the maximum speedup using parallel computing would be 2x, no matter how many processors are used. This implies that there is a point of diminishing returns where adding more processing power yields minimal improvements. This is because the non-parallelizable part of the program (the sequential component) becomes a bottleneck.
 
 
+
+
+
+
+
 \pagebreak
-\section{References}
-GPU Gems 3 web article \citep{GPU_Gems_3}.
-Fri ucilnica \citep{Fri_ucilnica}
-
-\pagebreak
-
-
-
 
 % BIBLIOGRAPHY %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 
@@ -748,4 +748,3 @@ Fri ucilnica \citep{Fri_ucilnica}
 
 \clearpage
 \end{document}
-
