@@ -1,0 +1,52 @@
+// Configure debug launch settings
+// Feel free to copy these and modify them for your debugger and MCU
+{
+    "version": "0.2.0",
+    "projectName": "uart-dma-vaja",
+    "configurations": [
+        {
+            "name": "STlink debug",
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/build/bsp-mems.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "stutil",
+            "device": "STM32H750xx",
+            "interface": "swd",
+            "runToEntryPoint": "main", // else it starts at reset handler - not interested
+            "preLaunchTask": "Build all", // configured in tasks.json
+            "preLaunchCommands": ["make -j4"], // you can execute command instead of task
+            "svdFile": "/home/irinej/Downloads/STM32H7_svd/STM32H7_svd_V1.9/STM32H750.svd", // Include svd to watch device peripherals
+            "swoConfig": {
+                "enabled": true,
+                "cpuFrequency": 100000000,
+                "swoFrequency": 4000000,
+                "source": "probe",
+                "decoders": [
+                    {
+                        "label": "ITM prot 0 output",
+                        "type": "console",
+                        "port": 0,
+                        "showOnStartup": true,
+                        "encoding": "ascii"
+                    }
+                ]
+            } // currently (v1.7.0) not supported
+        },
+        {
+            "name": "STlink attach",
+            "cwd": "${workspaceRoot}",
+            "executable": "${workspaceRoot}/build/bsp-mems.elf",
+            "request": "attach",
+            "type": "cortex-debug",
+            "servertype": "stutil",
+            "device": "STM32H750xx",
+            "interface": "swd",
+            "runToEntryPoint": "main", // else it starts at reset handler - not interested
+            "preLaunchTask": "Build all", // configured in tasks.json
+            // "preLaunchCommands": ["Build all"], // you can execute command instead of task
+            "svdFile": "/home/irinej/Downloads/STM32H7_svd/STM32H7_svd_V1.9/STM32H750.svd", // Include svd to watch device peripherals
+            "swoConfig": {} // currently (v1.7.0) not supported
+        },
+    ]
+}

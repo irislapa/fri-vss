@@ -13,7 +13,7 @@
 ######################################
 # target
 ######################################
-TARGET = tetris_from_example
+TARGET = stm32-tetris
 
 
 ######################################
@@ -49,12 +49,22 @@ Core/Src/quadspi.c \
 Core/Src/spi.c \
 Core/Src/tim.c \
 Core/Src/usart.c \
+Core/Src/joystick.c \
 Core/Src/stm32g4xx_it.c \
 Core/Src/stm32g4xx_hal_msp.c \
 USB_Device/App/usb_device.c \
 USB_Device/App/usbd_desc.c \
 USB_Device/App/usbd_cdc_if.c \
 USB_Device/Target/usbd_conf.c \
+System/buf.c \
+System/kbd.c \
+System/LED.c \
+System/SCI.c \
+Drivers/external/lcd_demo.c \
+Drivers/external/lcd_grafika.c \
+Drivers/external/lcd_ili9341.c \
+Drivers/external/lcd.c \
+Drivers/external/ugui.c \
 Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_utils.c \
 Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_exti.c \
 Drivers/STM32G4xx_HAL_Driver/Src/stm32g4xx_ll_gpio.c \
@@ -167,6 +177,8 @@ C_INCLUDES =  \
 -ICore/Inc \
 -IUSB_Device/App \
 -IUSB_Device/Target \
+-IDrivers/external \
+-ISystem/Include \
 -IDrivers/STM32G4xx_HAL_Driver/Inc \
 -IDrivers/STM32G4xx_HAL_Driver/Inc/Legacy \
 -IMiddlewares/ST/STM32_USB_Device_Library/Core/Inc \
@@ -249,3 +261,8 @@ clean:
 -include $(wildcard $(BUILD_DIR)/*.d)
 
 # *** EOF ***
+
+device = STM32G4XX 
+
+stflash: $(BUILD_DIR)/$(TARGET).bin
+	st-flash --reset write $(BUILD_DIR)/$(TARGET).bin 0x8000000

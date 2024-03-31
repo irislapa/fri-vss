@@ -1,0 +1,831 @@
+ARM GAS  /tmp/ccHr9FbF.s 			page 1
+
+
+   1              		.cpu cortex-m4
+   2              		.arch armv7e-m
+   3              		.fpu fpv4-sp-d16
+   4              		.eabi_attribute 27, 1
+   5              		.eabi_attribute 28, 1
+   6              		.eabi_attribute 20, 1
+   7              		.eabi_attribute 21, 1
+   8              		.eabi_attribute 23, 3
+   9              		.eabi_attribute 24, 1
+  10              		.eabi_attribute 25, 1
+  11              		.eabi_attribute 26, 1
+  12              		.eabi_attribute 30, 1
+  13              		.eabi_attribute 34, 1
+  14              		.eabi_attribute 18, 4
+  15              		.file	"lcd.c"
+  16              		.text
+  17              	.Ltext0:
+  18              		.cfi_sections	.debug_frame
+  19              		.section	.text.LCD_IO_Init,"ax",%progbits
+  20              		.align	1
+  21              		.syntax unified
+  22              		.thumb
+  23              		.thumb_func
+  25              	LCD_IO_Init:
+  26              	.LFB329:
+  27              		.file 1 "Drivers/external/lcd.c"
+   1:Drivers/external/lcd.c **** /*
+   2:Drivers/external/lcd.c ****  * Grafični gonilnik za platformo MiŠKo3.
+   3:Drivers/external/lcd.c ****  * Vsebuje:
+   4:Drivers/external/lcd.c ****  *   - lcd.{c,h}                Inicializacija in osnovno upravljanje zaslona
+   5:Drivers/external/lcd.c ****  *   - lcd_ili9341.{c,h}        Strojni vmesniki za inicializacijo in nastavljanje
+   6:Drivers/external/lcd.c ****  *                              krmilnika Ili9341 prek STMovega pomnilniškega vmesnika FMC
+   7:Drivers/external/lcd.c ****  *   - lcd_ili9341_registers.h  Seznam ukazov iz podatkovnega lista krmilnika Ili9341
+   8:Drivers/external/lcd.c ****  *   - lcd_demo.{c,h}           Grafični rutini za opcijski `Intro' funkciji
+   9:Drivers/external/lcd.c ****  *   - lcd_grafika.{c,h}        Bitni tabeli s slikama za `Intro' funkciji
+  10:Drivers/external/lcd.c ****  *
+  11:Drivers/external/lcd.c ****  * (C) 2022 Nejc Bertoncelj <nbertoncelj afna student.uni-lj.si>
+  12:Drivers/external/lcd.c ****  *
+  13:Drivers/external/lcd.c ****  * Deli povzeti po vmesniku platforme MiŠKo2
+  14:Drivers/external/lcd.c ****  * (C) 2015 Pirc, Jankovec, Matič et al, Fakulteta za elektrotehniko
+  15:Drivers/external/lcd.c ****  */
+  16:Drivers/external/lcd.c **** 
+  17:Drivers/external/lcd.c **** #include "lcd.h"
+  18:Drivers/external/lcd.c **** 
+  19:Drivers/external/lcd.c **** /*!
+  20:Drivers/external/lcd.c ****  * @brief Nizkonivojska inicializacija zaslona
+  21:Drivers/external/lcd.c ****  * @internal
+  22:Drivers/external/lcd.c ****  */
+  23:Drivers/external/lcd.c **** static void LCD_IO_Init()
+  24:Drivers/external/lcd.c **** {
+  28              		.loc 1 24 1 view -0
+  29              		.cfi_startproc
+  30              		@ args = 0, pretend = 0, frame = 0
+  31              		@ frame_needed = 0, uses_anonymous_args = 0
+  32 0000 38B5     		push	{r3, r4, r5, lr}
+  33              	.LCFI0:
+  34              		.cfi_def_cfa_offset 16
+ARM GAS  /tmp/ccHr9FbF.s 			page 2
+
+
+  35              		.cfi_offset 3, -16
+  36              		.cfi_offset 4, -12
+  37              		.cfi_offset 5, -8
+  38              		.cfi_offset 14, -4
+  25:Drivers/external/lcd.c **** 	LCD_RST_LOW();
+  39              		.loc 1 25 2 view .LVU1
+  40 0002 054C     		ldr	r4, .L3
+  41 0004 0825     		movs	r5, #8
+  42 0006 A562     		str	r5, [r4, #40]
+  26:Drivers/external/lcd.c **** 	HAL_Delay(120);
+  43              		.loc 1 26 2 view .LVU2
+  44 0008 7820     		movs	r0, #120
+  45 000a FFF7FEFF 		bl	HAL_Delay
+  46              	.LVL0:
+  27:Drivers/external/lcd.c **** 	LCD_RST_HIGH();
+  47              		.loc 1 27 2 view .LVU3
+  48 000e A561     		str	r5, [r4, #24]
+  28:Drivers/external/lcd.c **** 	HAL_Delay(120);
+  49              		.loc 1 28 2 view .LVU4
+  50 0010 7820     		movs	r0, #120
+  51 0012 FFF7FEFF 		bl	HAL_Delay
+  52              	.LVL1:
+  29:Drivers/external/lcd.c **** }
+  53              		.loc 1 29 1 is_stmt 0 view .LVU5
+  54 0016 38BD     		pop	{r3, r4, r5, pc}
+  55              	.L4:
+  56              		.align	2
+  57              	.L3:
+  58 0018 000C0048 		.word	1207962624
+  59              		.cfi_endproc
+  60              	.LFE329:
+  62              		.section	.text.LCD_FillRect,"ax",%progbits
+  63              		.align	1
+  64              		.global	LCD_FillRect
+  65              		.syntax unified
+  66              		.thumb
+  67              		.thumb_func
+  69              	LCD_FillRect:
+  70              	.LVL2:
+  71              	.LFB330:
+  30:Drivers/external/lcd.c **** 
+  31:Drivers/external/lcd.c **** /*!
+  32:Drivers/external/lcd.c ****  * @brief Strojno pospešen izris polnega pravokotnega polja
+  33:Drivers/external/lcd.c ****  * @param x x koordinata izhodišča
+  34:Drivers/external/lcd.c ****  * @param y y koordinata izhodišča
+  35:Drivers/external/lcd.c ****  * @param h višina polja
+  36:Drivers/external/lcd.c ****  * @param w širina polja
+  37:Drivers/external/lcd.c ****  * @param c podatek o barvi
+  38:Drivers/external/lcd.c ****  * @internal
+  39:Drivers/external/lcd.c ****  *
+  40:Drivers/external/lcd.c ****  * Funkcija izbere želeno območje, potem pa tolikokrat pošlje izbrano barvo,
+  41:Drivers/external/lcd.c ****  * kolikor slikovnih točk je potrebnih.
+  42:Drivers/external/lcd.c ****  */
+  43:Drivers/external/lcd.c **** void LCD_FillRect(uint32_t x, uint32_t y, uint32_t w, uint32_t h, uint16_t c)
+  44:Drivers/external/lcd.c **** {
+  72              		.loc 1 44 1 is_stmt 1 view -0
+  73              		.cfi_startproc
+ARM GAS  /tmp/ccHr9FbF.s 			page 3
+
+
+  74              		@ args = 4, pretend = 0, frame = 0
+  75              		@ frame_needed = 0, uses_anonymous_args = 0
+  76              		.loc 1 44 1 is_stmt 0 view .LVU7
+  77 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+  78              	.LCFI1:
+  79              		.cfi_def_cfa_offset 24
+  80              		.cfi_offset 4, -24
+  81              		.cfi_offset 5, -20
+  82              		.cfi_offset 6, -16
+  83              		.cfi_offset 7, -12
+  84              		.cfi_offset 8, -8
+  85              		.cfi_offset 14, -4
+  86 0004 0546     		mov	r5, r0
+  87 0006 0E46     		mov	r6, r1
+  88 0008 1746     		mov	r7, r2
+  89 000a 9846     		mov	r8, r3
+  45:Drivers/external/lcd.c **** 	uint32_t max_count   = ILI9341_GetParam(LCD_AREA);     /* Št. vseh pikslov     */
+  90              		.loc 1 45 2 is_stmt 1 view .LVU8
+  91              		.loc 1 45 25 is_stmt 0 view .LVU9
+  92 000c 0220     		movs	r0, #2
+  93              	.LVL3:
+  94              		.loc 1 45 25 view .LVU10
+  95 000e FFF7FEFF 		bl	ILI9341_GetParam
+  96              	.LVL4:
+  97              		.loc 1 45 25 view .LVU11
+  98 0012 0446     		mov	r4, r0
+  99              	.LVL5:
+  46:Drivers/external/lcd.c **** 	uint32_t pixel_count = ((w + 1) - x) * ((h + 1) - y);  /* Dejansko št. pikslov */
+ 100              		.loc 1 46 2 is_stmt 1 view .LVU12
+ 101              		.loc 1 46 34 is_stmt 0 view .LVU13
+ 102 0014 7B1B     		subs	r3, r7, r5
+ 103              		.loc 1 46 50 view .LVU14
+ 104 0016 A8EB060C 		sub	ip, r8, r6
+ 105 001a 0CF1010C 		add	ip, ip, #1
+ 106              		.loc 1 46 11 view .LVU15
+ 107 001e 03FB0CCC 		mla	ip, r3, ip, ip
+ 108              	.LVL6:
+  47:Drivers/external/lcd.c **** 
+  48:Drivers/external/lcd.c **** 	if(pixel_count > max_count)
+ 109              		.loc 1 48 2 is_stmt 1 view .LVU16
+ 110              		.loc 1 48 4 is_stmt 0 view .LVU17
+ 111 0022 6045     		cmp	r0, ip
+ 112 0024 00D3     		bcc	.L6
+  46:Drivers/external/lcd.c **** 	uint32_t pixel_count = ((w + 1) - x) * ((h + 1) - y);  /* Dejansko št. pikslov */
+ 113              		.loc 1 46 11 view .LVU18
+ 114 0026 6446     		mov	r4, ip
+ 115              	.L6:
+ 116              	.LVL7:
+  49:Drivers/external/lcd.c **** 		pixel_count = max_count;
+  50:Drivers/external/lcd.c **** 
+  51:Drivers/external/lcd.c **** 	// Izbor koordinat piksla
+  52:Drivers/external/lcd.c **** 	ILI9341_SetDisplayWindow(x, y, w, h);
+ 117              		.loc 1 52 2 is_stmt 1 view .LVU19
+ 118 0028 4346     		mov	r3, r8
+ 119 002a 3A46     		mov	r2, r7
+ 120 002c 3146     		mov	r1, r6
+ 121 002e 2846     		mov	r0, r5
+ARM GAS  /tmp/ccHr9FbF.s 			page 4
+
+
+ 122              	.LVL8:
+ 123              		.loc 1 52 2 is_stmt 0 view .LVU20
+ 124 0030 FFF7FEFF 		bl	ILI9341_SetDisplayWindow
+ 125              	.LVL9:
+  53:Drivers/external/lcd.c **** 
+  54:Drivers/external/lcd.c **** 	ILI9341_SendRepeatedData(c, pixel_count);
+ 126              		.loc 1 54 2 is_stmt 1 view .LVU21
+ 127 0034 2146     		mov	r1, r4
+ 128 0036 BDF81800 		ldrh	r0, [sp, #24]
+ 129 003a FFF7FEFF 		bl	ILI9341_SendRepeatedData
+ 130              	.LVL10:
+  55:Drivers/external/lcd.c **** 	//while (pixel_count) {
+  56:Drivers/external/lcd.c **** 	//	LCD_IO_SendData((uint16_t *)&c, LCD_IO_DATA_WRITE_CYCLES);
+  57:Drivers/external/lcd.c **** 	//	pixel_count--;
+  58:Drivers/external/lcd.c **** 	//}
+  59:Drivers/external/lcd.c **** }
+ 131              		.loc 1 59 1 is_stmt 0 view .LVU22
+ 132 003e BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 133              		.loc 1 59 1 view .LVU23
+ 134              		.cfi_endproc
+ 135              	.LFE330:
+ 137              		.section	.text.LCD_Tetromino,"ax",%progbits
+ 138              		.align	1
+ 139              		.global	LCD_Tetromino
+ 140              		.syntax unified
+ 141              		.thumb
+ 142              		.thumb_func
+ 144              	LCD_Tetromino:
+ 145              	.LFB331:
+  60:Drivers/external/lcd.c **** 
+  61:Drivers/external/lcd.c **** 
+  62:Drivers/external/lcd.c **** void LCD_Tetromino(Tetromino t) {
+ 146              		.loc 1 62 33 is_stmt 1 view -0
+ 147              		.cfi_startproc
+ 148              		@ args = 48, pretend = 16, frame = 0
+ 149              		@ frame_needed = 0, uses_anonymous_args = 0
+ 150 0000 84B0     		sub	sp, sp, #16
+ 151              	.LCFI2:
+ 152              		.cfi_def_cfa_offset 16
+ 153 0002 70B5     		push	{r4, r5, r6, lr}
+ 154              	.LCFI3:
+ 155              		.cfi_def_cfa_offset 32
+ 156              		.cfi_offset 4, -32
+ 157              		.cfi_offset 5, -28
+ 158              		.cfi_offset 6, -24
+ 159              		.cfi_offset 14, -20
+ 160 0004 04AC     		add	r4, sp, #16
+ 161 0006 84E80F00 		stm	r4, {r0, r1, r2, r3}
+  63:Drivers/external/lcd.c **** 	for (int y = 0; y < 4; y++) {
+ 162              		.loc 1 63 2 view .LVU25
+ 163              	.LBB2:
+ 164              		.loc 1 63 7 view .LVU26
+ 165              	.LVL11:
+ 166              		.loc 1 63 11 is_stmt 0 view .LVU27
+ 167 000a 0025     		movs	r5, #0
+ 168              		.loc 1 63 2 view .LVU28
+ 169 000c 22E0     		b	.L9
+ARM GAS  /tmp/ccHr9FbF.s 			page 5
+
+
+ 170              	.LVL12:
+ 171              	.L10:
+ 172              	.LBB3:
+  64:Drivers/external/lcd.c **** 		for (int x = 0; x < 4; x++) {
+ 173              		.loc 1 64 26 is_stmt 1 discriminator 2 view .LVU29
+ 174              		.loc 1 64 27 is_stmt 0 discriminator 2 view .LVU30
+ 175 000e 0134     		adds	r4, r4, #1
+ 176              	.LVL13:
+ 177              	.L12:
+ 178              		.loc 1 64 19 is_stmt 1 discriminator 1 view .LVU31
+ 179              		.loc 1 64 3 is_stmt 0 discriminator 1 view .LVU32
+ 180 0010 032C     		cmp	r4, #3
+ 181 0012 1EDC     		bgt	.L15
+ 182              	.LBB4:
+  65:Drivers/external/lcd.c **** 			int gridIndex = rotateTetromino(x, y, t.rotation);
+ 183              		.loc 1 65 4 is_stmt 1 view .LVU33
+ 184              		.loc 1 65 20 is_stmt 0 view .LVU34
+ 185 0014 049A     		ldr	r2, [sp, #16]
+ 186 0016 2946     		mov	r1, r5
+ 187 0018 2046     		mov	r0, r4
+ 188 001a FFF7FEFF 		bl	rotateTetromino
+ 189              	.LVL14:
+  66:Drivers/external/lcd.c **** 			uint16_t tetrominoValue = t.grid[gridIndex];
+ 190              		.loc 1 66 4 is_stmt 1 view .LVU35
+ 191              		.loc 1 66 13 is_stmt 0 view .LVU36
+ 192 001e 04AB     		add	r3, sp, #16
+ 193 0020 03EB4000 		add	r0, r3, r0, lsl #1
+ 194              	.LVL15:
+ 195              		.loc 1 66 13 view .LVU37
+ 196 0024 C688     		ldrh	r6, [r0, #6]
+ 197              	.LVL16:
+  67:Drivers/external/lcd.c **** 			if (tetrominoValue != 0) {  // If the current block of the tetromino is true
+ 198              		.loc 1 67 4 is_stmt 1 view .LVU38
+ 199              		.loc 1 67 7 is_stmt 0 view .LVU39
+ 200 0026 002E     		cmp	r6, #0
+ 201 0028 F1D0     		beq	.L10
+ 202              	.LBB5:
+  68:Drivers/external/lcd.c **** 				int pixelX = (t.x + x-1)*10;
+ 203              		.loc 1 68 5 is_stmt 1 view .LVU40
+ 204              		.loc 1 68 20 is_stmt 0 view .LVU41
+ 205 002a 0E98     		ldr	r0, [sp, #56]
+ 206              		.loc 1 68 23 view .LVU42
+ 207 002c 2044     		add	r0, r0, r4
+ 208              		.loc 1 68 26 view .LVU43
+ 209 002e 0138     		subs	r0, r0, #1
+ 210              		.loc 1 68 9 view .LVU44
+ 211 0030 00EB8000 		add	r0, r0, r0, lsl #2
+ 212              	.LVL17:
+  69:Drivers/external/lcd.c **** 				int pixelY = (t.y + y)*10;
+ 213              		.loc 1 69 5 is_stmt 1 view .LVU45
+ 214              		.loc 1 69 20 is_stmt 0 view .LVU46
+ 215 0034 0F99     		ldr	r1, [sp, #60]
+ 216              		.loc 1 69 23 view .LVU47
+ 217 0036 2944     		add	r1, r1, r5
+ 218              		.loc 1 69 9 view .LVU48
+ 219 0038 01EB8101 		add	r1, r1, r1, lsl #2
+ 220              	.LVL18:
+ARM GAS  /tmp/ccHr9FbF.s 			page 6
+
+
+  70:Drivers/external/lcd.c **** 				ILI9341_SetDisplayWindow(pixelX, pixelY, 10, 10);
+ 221              		.loc 1 70 5 is_stmt 1 view .LVU49
+ 222 003c 0A23     		movs	r3, #10
+ 223 003e 1A46     		mov	r2, r3
+ 224 0040 4900     		lsls	r1, r1, #1
+ 225              	.LVL19:
+ 226              		.loc 1 70 5 is_stmt 0 view .LVU50
+ 227 0042 4000     		lsls	r0, r0, #1
+ 228              	.LVL20:
+ 229              		.loc 1 70 5 view .LVU51
+ 230 0044 FFF7FEFF 		bl	ILI9341_SetDisplayWindow
+ 231              	.LVL21:
+  71:Drivers/external/lcd.c **** 				ILI9341_SendRepeatedData(tetrominoValue, 10*10);
+ 232              		.loc 1 71 5 is_stmt 1 view .LVU52
+ 233 0048 6421     		movs	r1, #100
+ 234 004a 3046     		mov	r0, r6
+ 235 004c FFF7FEFF 		bl	ILI9341_SendRepeatedData
+ 236              	.LVL22:
+ 237 0050 DDE7     		b	.L10
+ 238              	.LVL23:
+ 239              	.L15:
+ 240              		.loc 1 71 5 is_stmt 0 view .LVU53
+ 241              	.LBE5:
+ 242              	.LBE4:
+ 243              	.LBE3:
+  63:Drivers/external/lcd.c **** 		for (int x = 0; x < 4; x++) {
+ 244              		.loc 1 63 25 is_stmt 1 discriminator 2 view .LVU54
+  63:Drivers/external/lcd.c **** 		for (int x = 0; x < 4; x++) {
+ 245              		.loc 1 63 26 is_stmt 0 discriminator 2 view .LVU55
+ 246 0052 0135     		adds	r5, r5, #1
+ 247              	.LVL24:
+ 248              	.L9:
+  63:Drivers/external/lcd.c **** 		for (int x = 0; x < 4; x++) {
+ 249              		.loc 1 63 18 is_stmt 1 discriminator 1 view .LVU56
+  63:Drivers/external/lcd.c **** 		for (int x = 0; x < 4; x++) {
+ 250              		.loc 1 63 2 is_stmt 0 discriminator 1 view .LVU57
+ 251 0054 032D     		cmp	r5, #3
+ 252 0056 01DC     		bgt	.L16
+ 253              	.LBB6:
+  64:Drivers/external/lcd.c **** 			int gridIndex = rotateTetromino(x, y, t.rotation);
+ 254              		.loc 1 64 12 view .LVU58
+ 255 0058 0024     		movs	r4, #0
+ 256 005a D9E7     		b	.L12
+ 257              	.L16:
+ 258              	.LBE6:
+ 259              	.LBE2:
+  72:Drivers/external/lcd.c **** 			}
+  73:Drivers/external/lcd.c **** 		}
+  74:Drivers/external/lcd.c **** 	}
+  75:Drivers/external/lcd.c **** }
+ 260              		.loc 1 75 1 view .LVU59
+ 261 005c BDE87040 		pop	{r4, r5, r6, lr}
+ 262              	.LCFI4:
+ 263              		.cfi_restore 14
+ 264              		.cfi_restore 6
+ 265              		.cfi_restore 5
+ 266              		.cfi_restore 4
+ARM GAS  /tmp/ccHr9FbF.s 			page 7
+
+
+ 267              		.cfi_def_cfa_offset 16
+ 268              	.LVL25:
+ 269              		.loc 1 75 1 view .LVU60
+ 270 0060 04B0     		add	sp, sp, #16
+ 271              	.LCFI5:
+ 272              		.cfi_def_cfa_offset 0
+ 273 0062 7047     		bx	lr
+ 274              		.cfi_endproc
+ 275              	.LFE331:
+ 277              		.section	.text.LCD_PlayingField,"ax",%progbits
+ 278              		.align	1
+ 279              		.global	LCD_PlayingField
+ 280              		.syntax unified
+ 281              		.thumb
+ 282              		.thumb_func
+ 284              	LCD_PlayingField:
+ 285              	.LVL26:
+ 286              	.LFB332:
+  76:Drivers/external/lcd.c **** 
+  77:Drivers/external/lcd.c **** void LCD_PlayingField(uint16_t fieldArray[], int fullRow[]) {
+ 287              		.loc 1 77 61 is_stmt 1 view -0
+ 288              		.cfi_startproc
+ 289              		@ args = 0, pretend = 0, frame = 0
+ 290              		@ frame_needed = 0, uses_anonymous_args = 0
+ 291              		.loc 1 77 61 is_stmt 0 view .LVU62
+ 292 0000 2DE9F041 		push	{r4, r5, r6, r7, r8, lr}
+ 293              	.LCFI6:
+ 294              		.cfi_def_cfa_offset 24
+ 295              		.cfi_offset 4, -24
+ 296              		.cfi_offset 5, -20
+ 297              		.cfi_offset 6, -16
+ 298              		.cfi_offset 7, -12
+ 299              		.cfi_offset 8, -8
+ 300              		.cfi_offset 14, -4
+ 301 0004 8046     		mov	r8, r0
+ 302 0006 0F46     		mov	r7, r1
+  78:Drivers/external/lcd.c **** 	for (int y = 0; y < 25; y++) {
+ 303              		.loc 1 78 2 is_stmt 1 view .LVU63
+ 304              	.LBB7:
+ 305              		.loc 1 78 7 view .LVU64
+ 306              	.LVL27:
+ 307              		.loc 1 78 11 is_stmt 0 view .LVU65
+ 308 0008 0025     		movs	r5, #0
+ 309              		.loc 1 78 2 view .LVU66
+ 310 000a 2EE0     		b	.L18
+ 311              	.LVL28:
+ 312              	.L26:
+ 313              	.LBB8:
+ 314              	.LBB9:
+  79:Drivers/external/lcd.c **** 		for (int x = 0; x < 33; x++) {
+  80:Drivers/external/lcd.c **** 			uint16_t faValue = fieldArray[y * 34 + x+1];
+  81:Drivers/external/lcd.c **** 			if (fullRow[y] == 32) {
+  82:Drivers/external/lcd.c **** 				ILI9341_SetDisplayWindow(x*10, y*10, 10, 10);
+ 315              		.loc 1 82 5 is_stmt 1 view .LVU67
+ 316              		.loc 1 82 31 is_stmt 0 view .LVU68
+ 317 000c 04EB8400 		add	r0, r4, r4, lsl #2
+ 318              		.loc 1 82 37 view .LVU69
+ARM GAS  /tmp/ccHr9FbF.s 			page 8
+
+
+ 319 0010 05EB8501 		add	r1, r5, r5, lsl #2
+ 320              		.loc 1 82 5 view .LVU70
+ 321 0014 0A23     		movs	r3, #10
+ 322 0016 1A46     		mov	r2, r3
+ 323 0018 4900     		lsls	r1, r1, #1
+ 324 001a 4000     		lsls	r0, r0, #1
+ 325 001c FFF7FEFF 		bl	ILI9341_SetDisplayWindow
+ 326              	.LVL29:
+  83:Drivers/external/lcd.c **** 				ILI9341_SendRepeatedData(C_GOLDEN_ROD, (10)*(10));
+ 327              		.loc 1 83 5 is_stmt 1 view .LVU71
+ 328 0020 6421     		movs	r1, #100
+ 329 0022 4DF62450 		movw	r0, #56612
+ 330 0026 FFF7FEFF 		bl	ILI9341_SendRepeatedData
+ 331              	.LVL30:
+ 332              	.L20:
+ 333              		.loc 1 83 5 is_stmt 0 view .LVU72
+ 334              	.LBE9:
+  79:Drivers/external/lcd.c **** 		for (int x = 0; x < 33; x++) {
+ 335              		.loc 1 79 27 is_stmt 1 discriminator 2 view .LVU73
+  79:Drivers/external/lcd.c **** 		for (int x = 0; x < 33; x++) {
+ 336              		.loc 1 79 28 is_stmt 0 discriminator 2 view .LVU74
+ 337 002a 0134     		adds	r4, r4, #1
+ 338              	.LVL31:
+ 339              	.L22:
+  79:Drivers/external/lcd.c **** 		for (int x = 0; x < 33; x++) {
+ 340              		.loc 1 79 19 is_stmt 1 discriminator 1 view .LVU75
+  79:Drivers/external/lcd.c **** 		for (int x = 0; x < 33; x++) {
+ 341              		.loc 1 79 3 is_stmt 0 discriminator 1 view .LVU76
+ 342 002c 202C     		cmp	r4, #32
+ 343 002e 1BDC     		bgt	.L25
+ 344              	.LBB10:
+  80:Drivers/external/lcd.c **** 			if (fullRow[y] == 32) {
+ 345              		.loc 1 80 4 is_stmt 1 view .LVU77
+  80:Drivers/external/lcd.c **** 			if (fullRow[y] == 32) {
+ 346              		.loc 1 80 36 is_stmt 0 view .LVU78
+ 347 0030 05EB0513 		add	r3, r5, r5, lsl #4
+  80:Drivers/external/lcd.c **** 			if (fullRow[y] == 32) {
+ 348              		.loc 1 80 41 view .LVU79
+ 349 0034 04EB4303 		add	r3, r4, r3, lsl #1
+  80:Drivers/external/lcd.c **** 			if (fullRow[y] == 32) {
+ 350              		.loc 1 80 33 view .LVU80
+ 351 0038 0133     		adds	r3, r3, #1
+  80:Drivers/external/lcd.c **** 			if (fullRow[y] == 32) {
+ 352              		.loc 1 80 13 view .LVU81
+ 353 003a 38F81360 		ldrh	r6, [r8, r3, lsl #1]
+ 354              	.LVL32:
+  81:Drivers/external/lcd.c **** 				ILI9341_SetDisplayWindow(x*10, y*10, 10, 10);
+ 355              		.loc 1 81 4 is_stmt 1 view .LVU82
+  81:Drivers/external/lcd.c **** 				ILI9341_SetDisplayWindow(x*10, y*10, 10, 10);
+ 356              		.loc 1 81 15 is_stmt 0 view .LVU83
+ 357 003e 57F82530 		ldr	r3, [r7, r5, lsl #2]
+  81:Drivers/external/lcd.c **** 				ILI9341_SetDisplayWindow(x*10, y*10, 10, 10);
+ 358              		.loc 1 81 7 view .LVU84
+ 359 0042 202B     		cmp	r3, #32
+ 360 0044 E2D0     		beq	.L26
+  84:Drivers/external/lcd.c **** 			}
+  85:Drivers/external/lcd.c **** 			else if (faValue != 0) {
+ARM GAS  /tmp/ccHr9FbF.s 			page 9
+
+
+ 361              		.loc 1 85 9 is_stmt 1 view .LVU85
+ 362              		.loc 1 85 12 is_stmt 0 view .LVU86
+ 363 0046 002E     		cmp	r6, #0
+ 364 0048 EFD0     		beq	.L20
+  86:Drivers/external/lcd.c **** 				ILI9341_SetDisplayWindow(x*10, y*10, 10, 10);
+ 365              		.loc 1 86 5 is_stmt 1 view .LVU87
+ 366              		.loc 1 86 31 is_stmt 0 view .LVU88
+ 367 004a 04EB8400 		add	r0, r4, r4, lsl #2
+ 368              		.loc 1 86 37 view .LVU89
+ 369 004e 05EB8501 		add	r1, r5, r5, lsl #2
+ 370              		.loc 1 86 5 view .LVU90
+ 371 0052 0A23     		movs	r3, #10
+ 372 0054 1A46     		mov	r2, r3
+ 373 0056 4900     		lsls	r1, r1, #1
+ 374 0058 4000     		lsls	r0, r0, #1
+ 375 005a FFF7FEFF 		bl	ILI9341_SetDisplayWindow
+ 376              	.LVL33:
+  87:Drivers/external/lcd.c **** 				ILI9341_SendRepeatedData(faValue, (10)*(10));
+ 377              		.loc 1 87 5 is_stmt 1 view .LVU91
+ 378 005e 6421     		movs	r1, #100
+ 379 0060 3046     		mov	r0, r6
+ 380 0062 FFF7FEFF 		bl	ILI9341_SendRepeatedData
+ 381              	.LVL34:
+ 382 0066 E0E7     		b	.L20
+ 383              	.LVL35:
+ 384              	.L25:
+ 385              		.loc 1 87 5 is_stmt 0 view .LVU92
+ 386              	.LBE10:
+ 387              	.LBE8:
+  78:Drivers/external/lcd.c **** 		for (int x = 0; x < 33; x++) {
+ 388              		.loc 1 78 26 is_stmt 1 discriminator 2 view .LVU93
+  78:Drivers/external/lcd.c **** 		for (int x = 0; x < 33; x++) {
+ 389              		.loc 1 78 27 is_stmt 0 discriminator 2 view .LVU94
+ 390 0068 0135     		adds	r5, r5, #1
+ 391              	.LVL36:
+ 392              	.L18:
+  78:Drivers/external/lcd.c **** 		for (int x = 0; x < 33; x++) {
+ 393              		.loc 1 78 18 is_stmt 1 discriminator 1 view .LVU95
+  78:Drivers/external/lcd.c **** 		for (int x = 0; x < 33; x++) {
+ 394              		.loc 1 78 2 is_stmt 0 discriminator 1 view .LVU96
+ 395 006a 182D     		cmp	r5, #24
+ 396 006c 01DC     		bgt	.L27
+ 397              	.LBB11:
+  79:Drivers/external/lcd.c **** 			uint16_t faValue = fieldArray[y * 34 + x+1];
+ 398              		.loc 1 79 12 view .LVU97
+ 399 006e 0024     		movs	r4, #0
+ 400 0070 DCE7     		b	.L22
+ 401              	.L27:
+ 402              	.LBE11:
+ 403              	.LBE7:
+  88:Drivers/external/lcd.c **** 			}
+  89:Drivers/external/lcd.c **** 		}
+  90:Drivers/external/lcd.c **** 	}
+  91:Drivers/external/lcd.c **** }
+ 404              		.loc 1 91 1 view .LVU98
+ 405 0072 BDE8F081 		pop	{r4, r5, r6, r7, r8, pc}
+ 406              		.loc 1 91 1 view .LVU99
+ARM GAS  /tmp/ccHr9FbF.s 			page 10
+
+
+ 407              		.cfi_endproc
+ 408              	.LFE332:
+ 410              		.section	.text.LCD_TetrisFrame,"ax",%progbits
+ 411              		.align	1
+ 412              		.global	LCD_TetrisFrame
+ 413              		.syntax unified
+ 414              		.thumb
+ 415              		.thumb_func
+ 417              	LCD_TetrisFrame:
+ 418              	.LVL37:
+ 419              	.LFB333:
+  92:Drivers/external/lcd.c **** 
+  93:Drivers/external/lcd.c **** void LCD_TetrisFrame(Tetromino t, uint16_t field[], int fullRow[]) {
+ 420              		.loc 1 93 68 is_stmt 1 view -0
+ 421              		.cfi_startproc
+ 422              		@ args = 56, pretend = 16, frame = 0
+ 423              		@ frame_needed = 0, uses_anonymous_args = 0
+ 424              		.loc 1 93 68 is_stmt 0 view .LVU101
+ 425 0000 84B0     		sub	sp, sp, #16
+ 426              	.LCFI7:
+ 427              		.cfi_def_cfa_offset 16
+ 428 0002 00B5     		push	{lr}
+ 429              	.LCFI8:
+ 430              		.cfi_def_cfa_offset 20
+ 431              		.cfi_offset 14, -20
+ 432 0004 89B0     		sub	sp, sp, #36
+ 433              	.LCFI9:
+ 434              		.cfi_def_cfa_offset 56
+ 435 0006 0DF1280C 		add	ip, sp, #40
+ 436 000a 8CE80F00 		stm	ip, {r0, r1, r2, r3}
+  94:Drivers/external/lcd.c **** 	LCD_Tetromino(t);
+ 437              		.loc 1 94 2 is_stmt 1 view .LVU102
+ 438 000e EC46     		mov	ip, sp
+ 439 0010 0DF1380E 		add	lr, sp, #56
+ 440 0014 BEE80F00 		ldmia	lr!, {r0, r1, r2, r3}
+ 441 0018 ACE80F00 		stmia	ip!, {r0, r1, r2, r3}
+ 442 001c 9EE80F00 		ldm	lr, {r0, r1, r2, r3}
+ 443 0020 8CE80F00 		stm	ip, {r0, r1, r2, r3}
+ 444 0024 0AAB     		add	r3, sp, #40
+ 445 0026 0FCB     		ldm	r3, {r0, r1, r2, r3}
+ 446 0028 FFF7FEFF 		bl	LCD_Tetromino
+ 447              	.LVL38:
+  95:Drivers/external/lcd.c **** 	LCD_PlayingField(field, fullRow);
+ 448              		.loc 1 95 2 view .LVU103
+ 449 002c 1799     		ldr	r1, [sp, #92]
+ 450 002e 1698     		ldr	r0, [sp, #88]
+ 451 0030 FFF7FEFF 		bl	LCD_PlayingField
+ 452              	.LVL39:
+  96:Drivers/external/lcd.c **** }
+ 453              		.loc 1 96 1 is_stmt 0 view .LVU104
+ 454 0034 09B0     		add	sp, sp, #36
+ 455              	.LCFI10:
+ 456              		.cfi_def_cfa_offset 20
+ 457              		@ sp needed
+ 458 0036 5DF804EB 		ldr	lr, [sp], #4
+ 459              	.LCFI11:
+ 460              		.cfi_restore 14
+ARM GAS  /tmp/ccHr9FbF.s 			page 11
+
+
+ 461              		.cfi_def_cfa_offset 16
+ 462 003a 04B0     		add	sp, sp, #16
+ 463              	.LCFI12:
+ 464              		.cfi_def_cfa_offset 0
+ 465 003c 7047     		bx	lr
+ 466              		.cfi_endproc
+ 467              	.LFE333:
+ 469              		.section	.text.LCD_SetBacklight,"ax",%progbits
+ 470              		.align	1
+ 471              		.global	LCD_SetBacklight
+ 472              		.syntax unified
+ 473              		.thumb
+ 474              		.thumb_func
+ 476              	LCD_SetBacklight:
+ 477              	.LVL40:
+ 478              	.LFB335:
+  97:Drivers/external/lcd.c **** 
+  98:Drivers/external/lcd.c **** /*!
+  99:Drivers/external/lcd.c ****  * @brief Glavna inicializacija zaslona
+ 100:Drivers/external/lcd.c ****  *
+ 101:Drivers/external/lcd.c ****  * Inicializacija nastavi privzet barvni prostor (RGB565), orientacijo zaslona, vklopi osvetlitev,
+ 102:Drivers/external/lcd.c ****  * zapolni zaslon s črno barvo in nastavi bel tekst na črni podlagi.
+ 103:Drivers/external/lcd.c ****  * @note Za inicializacijo posameznih strojnih enot mora poskrbeti uporabnik (npr. FMC)
+ 104:Drivers/external/lcd.c ****  */
+ 105:Drivers/external/lcd.c **** void LCD_Init()
+ 106:Drivers/external/lcd.c **** {
+ 107:Drivers/external/lcd.c **** 	// Resetiraj V/I linijo zaslona
+ 108:Drivers/external/lcd.c **** 	LCD_IO_Init();
+ 109:Drivers/external/lcd.c **** 
+ 110:Drivers/external/lcd.c **** 	// Inicializiraj krmilnik Ili9341 v barvnem prostoru RBG565 in brez zasuka slike
+ 111:Drivers/external/lcd.c **** 	ILI9341_Init(ILI9341_COLORSPACE_RBG565, ILI9341_MISKO_ROTATE_0);
+ 112:Drivers/external/lcd.c **** 	ILI9341_DisplayOn();
+ 113:Drivers/external/lcd.c **** 
+ 114:Drivers/external/lcd.c **** 	LCD_ClearScreen();
+ 115:Drivers/external/lcd.c **** 	// Gornja funkcija se bo zaključila pred izbrisom celega zaslona, ker si FMC zapomni vse
+ 116:Drivers/external/lcd.c **** 	// ukaze in sporoči, da se je zaključil prenos, ne pa pošiljanje.
+ 117:Drivers/external/lcd.c **** 	// Brez zamika bo zaslon za trenutek utripnil belo. Prej:  HAL_Delay(25);
+ 118:Drivers/external/lcd.c **** 	ILI9341_WaitTransfer();
+ 119:Drivers/external/lcd.c **** 	LCD_SetBacklight(1);
+ 120:Drivers/external/lcd.c **** }
+ 121:Drivers/external/lcd.c **** 
+ 122:Drivers/external/lcd.c **** /*!
+ 123:Drivers/external/lcd.c ****  * @brief Vklopi/izklopi osvetlitev zaslona
+ 124:Drivers/external/lcd.c ****  * @param state logična vrednost
+ 125:Drivers/external/lcd.c ****  */
+ 126:Drivers/external/lcd.c **** 
+ 127:Drivers/external/lcd.c **** void LCD_SetBacklight(uint8_t state)
+ 128:Drivers/external/lcd.c **** {
+ 479              		.loc 1 128 1 is_stmt 1 view -0
+ 480              		.cfi_startproc
+ 481              		@ args = 0, pretend = 0, frame = 0
+ 482              		@ frame_needed = 0, uses_anonymous_args = 0
+ 483              		@ link register save eliminated.
+ 129:Drivers/external/lcd.c **** 	if (state == 1)
+ 484              		.loc 1 129 2 view .LVU106
+ 485              		.loc 1 129 5 is_stmt 0 view .LVU107
+ 486 0000 0128     		cmp	r0, #1
+ARM GAS  /tmp/ccHr9FbF.s 			page 12
+
+
+ 487 0002 03D0     		beq	.L33
+ 130:Drivers/external/lcd.c **** 		LCD_BCKL_ON();
+ 131:Drivers/external/lcd.c **** 	else
+ 132:Drivers/external/lcd.c **** 		LCD_BCKL_OFF();
+ 488              		.loc 1 132 3 is_stmt 1 view .LVU108
+ 489 0004 034B     		ldr	r3, .L34
+ 490 0006 4022     		movs	r2, #64
+ 491 0008 9A62     		str	r2, [r3, #40]
+ 133:Drivers/external/lcd.c **** }
+ 492              		.loc 1 133 1 is_stmt 0 view .LVU109
+ 493 000a 7047     		bx	lr
+ 494              	.L33:
+ 130:Drivers/external/lcd.c **** 		LCD_BCKL_ON();
+ 495              		.loc 1 130 3 is_stmt 1 view .LVU110
+ 496 000c 014B     		ldr	r3, .L34
+ 497 000e 4022     		movs	r2, #64
+ 498 0010 9A61     		str	r2, [r3, #24]
+ 499 0012 7047     		bx	lr
+ 500              	.L35:
+ 501              		.align	2
+ 502              	.L34:
+ 503 0014 00040048 		.word	1207960576
+ 504              		.cfi_endproc
+ 505              	.LFE335:
+ 507              		.section	.text.LCD_ClearScreen,"ax",%progbits
+ 508              		.align	1
+ 509              		.global	LCD_ClearScreen
+ 510              		.syntax unified
+ 511              		.thumb
+ 512              		.thumb_func
+ 514              	LCD_ClearScreen:
+ 515              	.LFB336:
+ 134:Drivers/external/lcd.c **** 
+ 135:Drivers/external/lcd.c **** /*!
+ 136:Drivers/external/lcd.c ****  * @brief Počisti zaslon (prebarvaj s črno barvo)
+ 137:Drivers/external/lcd.c ****  */
+ 138:Drivers/external/lcd.c **** void LCD_ClearScreen()
+ 139:Drivers/external/lcd.c **** {
+ 516              		.loc 1 139 1 view -0
+ 517              		.cfi_startproc
+ 518              		@ args = 0, pretend = 0, frame = 0
+ 519              		@ frame_needed = 0, uses_anonymous_args = 0
+ 520 0000 08B5     		push	{r3, lr}
+ 521              	.LCFI13:
+ 522              		.cfi_def_cfa_offset 8
+ 523              		.cfi_offset 3, -8
+ 524              		.cfi_offset 14, -4
+ 140:Drivers/external/lcd.c **** 	ILI9341_SetDisplayWindow(0, 0, 320, 240);
+ 525              		.loc 1 140 2 view .LVU112
+ 526 0002 F023     		movs	r3, #240
+ 527 0004 4FF4A072 		mov	r2, #320
+ 528 0008 0021     		movs	r1, #0
+ 529 000a 0846     		mov	r0, r1
+ 530 000c FFF7FEFF 		bl	ILI9341_SetDisplayWindow
+ 531              	.LVL41:
+ 141:Drivers/external/lcd.c **** 	ILI9341_SendRepeatedData(C_BLACK, 321*241);
+ 532              		.loc 1 141 2 view .LVU113
+ARM GAS  /tmp/ccHr9FbF.s 			page 13
+
+
+ 533 0010 0249     		ldr	r1, .L38
+ 534 0012 0020     		movs	r0, #0
+ 535 0014 FFF7FEFF 		bl	ILI9341_SendRepeatedData
+ 536              	.LVL42:
+ 142:Drivers/external/lcd.c **** }
+ 537              		.loc 1 142 1 is_stmt 0 view .LVU114
+ 538 0018 08BD     		pop	{r3, pc}
+ 539              	.L39:
+ 540 001a 00BF     		.align	2
+ 541              	.L38:
+ 542 001c 312E0100 		.word	77361
+ 543              		.cfi_endproc
+ 544              	.LFE336:
+ 546              		.section	.text.LCD_Init,"ax",%progbits
+ 547              		.align	1
+ 548              		.global	LCD_Init
+ 549              		.syntax unified
+ 550              		.thumb
+ 551              		.thumb_func
+ 553              	LCD_Init:
+ 554              	.LFB334:
+ 106:Drivers/external/lcd.c **** 	// Resetiraj V/I linijo zaslona
+ 555              		.loc 1 106 1 is_stmt 1 view -0
+ 556              		.cfi_startproc
+ 557              		@ args = 0, pretend = 0, frame = 0
+ 558              		@ frame_needed = 0, uses_anonymous_args = 0
+ 559 0000 08B5     		push	{r3, lr}
+ 560              	.LCFI14:
+ 561              		.cfi_def_cfa_offset 8
+ 562              		.cfi_offset 3, -8
+ 563              		.cfi_offset 14, -4
+ 108:Drivers/external/lcd.c **** 
+ 564              		.loc 1 108 2 view .LVU116
+ 565 0002 FFF7FEFF 		bl	LCD_IO_Init
+ 566              	.LVL43:
+ 111:Drivers/external/lcd.c **** 	ILI9341_DisplayOn();
+ 567              		.loc 1 111 2 view .LVU117
+ 568 0006 0321     		movs	r1, #3
+ 569 0008 5520     		movs	r0, #85
+ 570 000a FFF7FEFF 		bl	ILI9341_Init
+ 571              	.LVL44:
+ 112:Drivers/external/lcd.c **** 
+ 572              		.loc 1 112 2 view .LVU118
+ 573 000e FFF7FEFF 		bl	ILI9341_DisplayOn
+ 574              	.LVL45:
+ 114:Drivers/external/lcd.c **** 	// Gornja funkcija se bo zaključila pred izbrisom celega zaslona, ker si FMC zapomni vse
+ 575              		.loc 1 114 2 view .LVU119
+ 576 0012 FFF7FEFF 		bl	LCD_ClearScreen
+ 577              	.LVL46:
+ 118:Drivers/external/lcd.c **** 	LCD_SetBacklight(1);
+ 578              		.loc 1 118 2 view .LVU120
+ 579 0016 FFF7FEFF 		bl	ILI9341_WaitTransfer
+ 580              	.LVL47:
+ 119:Drivers/external/lcd.c **** }
+ 581              		.loc 1 119 2 view .LVU121
+ 582 001a 0120     		movs	r0, #1
+ 583 001c FFF7FEFF 		bl	LCD_SetBacklight
+ARM GAS  /tmp/ccHr9FbF.s 			page 14
+
+
+ 584              	.LVL48:
+ 120:Drivers/external/lcd.c **** 
+ 585              		.loc 1 120 1 is_stmt 0 view .LVU122
+ 586 0020 08BD     		pop	{r3, pc}
+ 587              		.cfi_endproc
+ 588              	.LFE334:
+ 590              		.text
+ 591              	.Letext0:
+ 592              		.file 2 "/usr/share/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/machine/_default_types.h"
+ 593              		.file 3 "/usr/share/gcc-arm-none-eabi-10.3-2021.10/arm-none-eabi/include/sys/_stdint.h"
+ 594              		.file 4 "Drivers/CMSIS/Device/ST/STM32G4xx/Include/stm32g474xx.h"
+ 595              		.file 5 "Core/Inc/tetromino.h"
+ 596              		.file 6 "Drivers/external/lcd_ili9341.h"
+ 597              		.file 7 "Drivers/STM32G4xx_HAL_Driver/Inc/stm32g4xx_hal.h"
+ARM GAS  /tmp/ccHr9FbF.s 			page 15
+
+
+DEFINED SYMBOLS
+                            *ABS*:0000000000000000 lcd.c
+     /tmp/ccHr9FbF.s:20     .text.LCD_IO_Init:0000000000000000 $t
+     /tmp/ccHr9FbF.s:25     .text.LCD_IO_Init:0000000000000000 LCD_IO_Init
+     /tmp/ccHr9FbF.s:58     .text.LCD_IO_Init:0000000000000018 $d
+     /tmp/ccHr9FbF.s:63     .text.LCD_FillRect:0000000000000000 $t
+     /tmp/ccHr9FbF.s:69     .text.LCD_FillRect:0000000000000000 LCD_FillRect
+     /tmp/ccHr9FbF.s:138    .text.LCD_Tetromino:0000000000000000 $t
+     /tmp/ccHr9FbF.s:144    .text.LCD_Tetromino:0000000000000000 LCD_Tetromino
+     /tmp/ccHr9FbF.s:278    .text.LCD_PlayingField:0000000000000000 $t
+     /tmp/ccHr9FbF.s:284    .text.LCD_PlayingField:0000000000000000 LCD_PlayingField
+     /tmp/ccHr9FbF.s:411    .text.LCD_TetrisFrame:0000000000000000 $t
+     /tmp/ccHr9FbF.s:417    .text.LCD_TetrisFrame:0000000000000000 LCD_TetrisFrame
+     /tmp/ccHr9FbF.s:470    .text.LCD_SetBacklight:0000000000000000 $t
+     /tmp/ccHr9FbF.s:476    .text.LCD_SetBacklight:0000000000000000 LCD_SetBacklight
+     /tmp/ccHr9FbF.s:503    .text.LCD_SetBacklight:0000000000000014 $d
+     /tmp/ccHr9FbF.s:508    .text.LCD_ClearScreen:0000000000000000 $t
+     /tmp/ccHr9FbF.s:514    .text.LCD_ClearScreen:0000000000000000 LCD_ClearScreen
+     /tmp/ccHr9FbF.s:542    .text.LCD_ClearScreen:000000000000001c $d
+     /tmp/ccHr9FbF.s:547    .text.LCD_Init:0000000000000000 $t
+     /tmp/ccHr9FbF.s:553    .text.LCD_Init:0000000000000000 LCD_Init
+
+UNDEFINED SYMBOLS
+HAL_Delay
+ILI9341_GetParam
+ILI9341_SetDisplayWindow
+ILI9341_SendRepeatedData
+rotateTetromino
+ILI9341_Init
+ILI9341_DisplayOn
+ILI9341_WaitTransfer
