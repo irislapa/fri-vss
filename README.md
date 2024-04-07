@@ -10,5 +10,5 @@ The code is available in the `recommender_system` folder. Ui is yet to be implem
 
 ## Cuda histogram equalization
 For a parallel computing class I had to implement a histogram equalization algorithm using cuda. 
-We were given a sequential implementation for each step (histogram calculation, comulative distribution calculation and histogram equalization).
+We were given a sequential implementation for each step (histogram calculation, comulative distribution calculation and histogram equalization), and had to paralelize it.
 The code and test experiment report are available in the `cuda_histogram_equalization` folder.
