@@ -6,7 +6,7 @@ Code implementations in `bezier-curve-painter` and `quad-tree-collision-detectio
 
 ## Recommendation system
 For a data-mining class I had to implement a movie recomendation system that uses matrix factorization.
-The code is available in the `recommender_system` folder. There ui is yet to be implemented
+The code is available in the `recommender_system` folder. Ui is yet to be implemented
 
 ## Cuda histogram equalization
 For a parallel computing class I had to implement a histogram equalization algorithm using cuda. 
