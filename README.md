@@ -1,7 +1,7 @@
 # Collection of some of the homeworks and class projects from university.
 
 ## Bezier curve painter and Quad tree collision detection 
-demos of both homeworks is available at https://irislapa.github.io/fri-vss/. \
+demos of both homeworks are available at https://irislapa.github.io/fri-vss/. \
 Code implementations in `bezier-curve-painter` and `quad-tree-collision-detection`
 
 ## Recommendation system
