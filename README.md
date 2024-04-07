@@ -2,6 +2,7 @@
 
 ## Bezier curve painter and Quad tree collision detection 
 demos of both homeworks is available at https://irislapa.github.io/fri-vss/.
+code implementations in `bezier-curve-painter` and `quad-tree-collision-detection`
 
 ## Recommendation system
 For a data-mining class I had to implement a movie recomendation system that uses matrix factorization.
