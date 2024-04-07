@@ -5,7 +5,7 @@ demos of both homeworks is available at https://irislapa.github.io/fri-vss/.
 code implementations in `bezier-curve-painter` and `quad-tree-collision-detection`
 
 ## Recommendation system
-For a data-mining class I had to implement a movie recomendation system that uses matrix factorization. \
+For a data-mining class I had to implement a movie recomendation system that uses matrix factorization. <br />
 The code is available in the `recommender_system` folder. There is no ui.
 
 ## Cuda histogram equalization
