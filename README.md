@@ -1,3 +1,13 @@
 # Collection of some of the homeworks and class projects from university.
 
-homework demos at https://dr3vo.github.io/fri-vss/
+## Bezier curve painter and Quad tree collision detection 
+demos of both homeworks is available at https://irislapa.github.io/fri-vss/.
+
+## Recommendation system
+For a data-mining class I had to implement a movie recomendation system that uses matrix factorization.
+The code is available in the `recommender_system` folder. There is no ui.
+
+## Cuda histogram equalization
+For a parallel computing class I had to implement a histogram equalization algorithm using cuda. 
+We were given a sequential implementation for each step (histogram calculation, comulative distribution calculation and histogram equalization).
+The code and test experiment report are available in the `cuda_histogram_equalization` folder.

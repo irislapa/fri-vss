@@ -1,8 +1,0 @@
-../Drivers/external/lcd.c:23:13:LCD_IO_Init	1
-../Drivers/external/lcd.c:43:6:LCD_FillRect	2
-../Drivers/external/lcd.c:62:6:LCD_Tetromino	4
-../Drivers/external/lcd.c:77:6:LCD_PlayingField	5
-../Drivers/external/lcd.c:93:6:LCD_TetrisFrame	1
-../Drivers/external/lcd.c:105:6:LCD_Init	1
-../Drivers/external/lcd.c:127:6:LCD_SetBacklight	2
-../Drivers/external/lcd.c:138:6:LCD_ClearScreen	1

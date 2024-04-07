@@ -1,4 +1,0 @@
-../Drivers/external/XPT2046_touch.c:24:13:XPT2046_TouchSelect	1
-../Drivers/external/XPT2046_touch.c:29:13:XPT2046_TouchUnselect	1
-../Drivers/external/XPT2046_touch.c:34:6:XPT2046_TouchPressed	1
-../Drivers/external/XPT2046_touch.c:39:6:XPT2046_TouchGetCoordinates	8
