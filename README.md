@@ -9,6 +9,7 @@ For a data-mining class I had to implement a movie recomendation system that use
 The code is available in the `recommender_system` folder. Ui is yet to be implemented
 
 ## Cuda histogram equalization
+[Project report in english](./cuda-histogram-equalization/project_report.pdf)
 For a parallel computing class I had to implement a histogram equalization algorithm using cuda. 
 We were given a sequential implementation for each step (histogram calculation, comulative distribution calculation and histogram equalization), and had to parallelize it.
 The code and test experiment report are available in the `cuda_histogram_equalization` folder.
