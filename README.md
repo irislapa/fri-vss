@@ -1,14 +1,19 @@
 # Collection of some homeworks and class projects from university.
+\
 
 ## Bezier curve painter and Quad tree collision detection 
 Demos for both homeworks are available at https://irislapa.github.io/fri-vss/. \
 Code implementations is located in `bezier-curve-painter` and `quad-tree-collision-detection`
-
+\
+\
+\
 ## Recommendation system
 [ipynb notebook](./recommendation-system/movieRecommender.ipynb) \
 For a data-mining class I had to implement a movie recomendation system that uses matrix factorization.
 The code is available in the `recommender_system` folder. Ui is yet to be implemented
-
+\
+\
+\
 ## Cuda histogram equalization
 [Project report in english](./cuda-histogram-equalization/project_report.pdf) \
 For a parallel computing class I had to implement a histogram equalization algorithm using cuda. 
